@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/resume/1.0.0/resume.schema.json",
+  "title": "Resume",
+  "description": "Canonical structured resume. Single source of truth for scoring, tailoring and rendering (ADR-0005). Every list item has a stable `id`. In a tailored version, items selected from the user's profile KEEP their original id, and rephrased bullets carry `source_refs` pointing to the original bullet ids. Replace the $id domain before publishing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "basics"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "basics": { "$ref": "#/$defs/basics" },
+    "experience": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/experience" }
+    },
+    "education": {
+      "type": "array",
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/education" }
+    },
+    "projects": {
+      "type": "array",
+      "maxItems": 30,
+      "items": { "$ref": "#/$defs/project" }
+    },
+    "skills": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/skillGroup" }
+    },
+    "certifications": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/certification" }
+    },
+    "achievements": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/achievement" }
+    },
+    "languages": {
+      "type": "array",
+      "maxItems": 15,
+      "items": { "$ref": "#/$defs/language" }
+    },
+    "private": { "$ref": "#/$defs/private" },
+    "meta": { "$ref": "#/$defs/meta" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "yearMonth": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$",
+      "description": "ISO year-month, for example 2024-07"
+    },
+    "bullet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/id" },
+          "description": "Ids of the profile bullets this text was derived from. Required on AI-rephrased bullets so the truthfulness guard can trace every claim."
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "url"],
+      "properties": {
+        "label": { "type": "string", "maxLength": 40 },
+        "url": { "type": "string", "format": "uri", "maxLength": 300 }
+      }
+    },
+    "basics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "headline": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "phone": { "type": "string", "pattern": "^\\+?[0-9 ()-]{7,20}$" },
+        "location": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "city": { "type": "string", "maxLength": 80 },
+            "state": { "type": "string", "maxLength": 80 },
+            "country": { "type": "string", "maxLength": 80 }
+          }
+        },
+        "links": {
+          "type": "array",
+          "maxItems": 6,
+          "items": { "$ref": "#/$defs/link" }
+        },
+        "summary": { "type": "string", "maxLength": 600 }
+      }
+    },
+    "experience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "company", "title", "start"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "company": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "location": { "type": "string", "maxLength": 120 },
+        "employment_type": {
+          "type": "string",
+          "enum": ["full_time", "part_time", "internship", "contract", "freelance"]
+        },
+        "start": { "$ref": "#/$defs/yearMonth" },
+        "end": {
+          "oneOf": [
+            { "$ref": "#/$defs/yearMonth" },
+            { "type": "null" }
+          ]
+        },
+        "current": { "type": "boolean" },
+        "technologies": {
+          "type": "array",
+          "maxItems": 30,
+          "items": { "type": "string", "maxLength": 60 }
+        },
+        "bullets": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/bullet" }
+        }
+      }
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "institution"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "institution": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "degree": { "type": "string", "maxLength": 120 },
+        "field": { "type": "string", "maxLength": 120 },
+        "location": { "type": "string", "maxLength": 120 },
+        "start": { "$ref": "#/$defs/yearMonth" },
+        "end": {
+          "oneOf": [
+            { "$ref": "#/$defs/yearMonth" },
+            { "type": "null" }
+          ]
+        },
+        "grade": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "value"],
+          "properties": {
+            "type": { "type": "string", "enum": ["cgpa", "gpa", "percentage"] },
+            "value": { "type": "number", "minimum": 0 },
+            "scale": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "highlights": {
+          "type": "array",
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/bullet" }
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 300 },
+        "url": { "type": "string", "format": "uri", "maxLength": 300 },
+        "repo_url": { "type": "string", "format": "uri", "maxLength": 300 },
+        "start": { "$ref": "#/$defs/yearMonth" },
+        "end": {
+          "oneOf": [
+            { "$ref": "#/$defs/yearMonth" },
+            { "type": "null" }
+          ]
+        },
+        "technologies": {
+          "type": "array",
+          "maxItems": 30,
+          "items": { "type": "string", "maxLength": 60 }
+        },
+        "bullets": {
+          "type": "array",
+          "maxItems": 6,
+          "items": { "$ref": "#/$defs/bullet" }
+        }
+      }
+    },
+    "skillItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "canonical_id": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "Id in the normalised skill taxonomy (for example ESCO or an internal alias table). Set by the normaliser, not by the user."
+        },
+        "years": { "type": "number", "minimum": 0, "maximum": 60 }
+      }
+    },
+    "skillGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "items"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "category": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 40,
+          "items": { "$ref": "#/$defs/skillItem" }
+        }
+      }
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "issuer": { "type": "string", "maxLength": 120 },
+        "date": { "$ref": "#/$defs/yearMonth" },
+        "url": { "type": "string", "format": "uri", "maxLength": 300 }
+      }
+    },
+    "achievement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 300 }
+      }
+    },
+    "language": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "proficiency": {
+          "type": "string",
+          "enum": ["basic", "conversational", "professional", "native"]
+        }
+      }
+    },
+    "private": {
+      "type": "object",
+      "description": "Fields common in Indian hiring flows. Stored with the profile but NEVER rendered into a resume unless the key is listed in render_opt_in (ADR-0009).",
+      "additionalProperties": false,
+      "properties": {
+        "current_ctc_inr": { "type": "number", "minimum": 0 },
+        "expected_ctc_inr": { "type": "number", "minimum": 0 },
+        "notice_period_days": { "type": "integer", "minimum": 0, "maximum": 365 },
+        "date_of_birth": { "type": "string", "format": "date" },
+        "photo_url": { "type": "string", "format": "uri" },
+        "render_opt_in": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "current_ctc_inr",
+              "expected_ctc_inr",
+              "notice_period_days",
+              "date_of_birth",
+              "photo_url"
+            ]
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "template_id": { "type": "string", "maxLength": 60 },
+        "locale": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+        "derived_from_version_id": { "$ref": "#/$defs/id" },
+        "job_description_id": { "$ref": "#/$defs/id" },
+        "generated_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "type": "string", "enum": ["user", "import", "ai_tailor"] },
+            "prompt_version": { "type": "string", "maxLength": 40 },
+            "model": { "type": "string", "maxLength": 80 }
+          }
+        }
+      }
+    }
+  }
+}

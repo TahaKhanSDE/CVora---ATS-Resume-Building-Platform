@@ -1,0 +1,3143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRUTH//PRINT — Honest ATS Resume Platform (BYOK & LaTeX)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Cabinet/Syne equivalent (Syne), Instrument Serif, Caveat, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            newsprint: '#F9F6F0',
+            kraft: '#EFECE6',
+            carbon: '#141413',
+            ink: '#141413',
+            ochre: '#F59E0B',
+            highlighter: '#F59E0B',
+            crimson: '#E11D48',
+            stampRed: '#E11D48',
+            cyanprint: '#0284C7',
+            blueprint: '#0284C7',
+            mint: '#10B981',
+            mintInk: '#10B981',
+            tapeYellow: 'rgba(254, 240, 138, 0.85)',
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'serif'],
+            body: ['"Plus Jakarta Sans"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            hand: ['Caveat', 'cursive'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'brutal': '4px 4px 0px #141413',
+            'brutal-lg': '6px 6px 0px #141413',
+            'brutal-sm': '2px 2px 0px #141413',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Paper texture simulation */
+    .paper-texture {
+      background-color: #F9F6F0;
+      background-image: radial-gradient(#141413 0.65px, transparent 0.65px), radial-gradient(#141413 0.65px, #F9F6F0 0.65px);
+      background-size: 26px 26px;
+      background-position: 0 0, 13px 13px;
+    }
+
+    /* Washi Tape styling */
+    .washi-tape {
+      background: rgba(245, 158, 11, 0.78);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .washi-tape::before, .washi-tape::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: radial-gradient(circle, transparent, transparent 50%, rgba(245, 158, 11, 0.78) 50%);
+      background-size: 4px 4px;
+    }
+    .washi-tape::before { left: -3px; }
+    .washi-tape::after { right: -3px; }
+
+    /* Rubber Ink Stamp Effect */
+    .stamp {
+      border: 2.5px solid currentColor;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      mask-image: radial-gradient(circle at 50% 50%, black 70%, transparent 120%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+    }
+
+    .rubber-stamp {
+      border: 3px solid #10B981;
+      color: #10B981;
+      mask-image: radial-gradient(circle, rgba(0,0,0,1) 80%, rgba(0,0,0,0.6) 100%);
+    }
+
+    /* Pushpin graphic */
+    .pushpin {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #F59E0B, #B45309);
+      box-shadow: 2px 3px 4px rgba(0,0,0,0.3);
+      position: absolute;
+    }
+
+    /* Perforated ticket edge */
+    .perforated-ticket {
+      background: #141413;
+      position: relative;
+    }
+    .perforated-ticket::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background-color: #F9F6F0;
+      border-radius: 50%;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #EFECE6;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #141413;
+    }
+
+    /* Subtle cursor interaction */
+    button, a {
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    button:active, a:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #141413 !important;
+    }
+  </style>
+</head>
+
+<body class="paper-texture text-carbon font-body min-h-screen antialiased selection:bg-ochre selection:text-carbon relative overflow-x-hidden select-none">
+
+  <!-- ========================================================= -->
+  <!-- 1. TOP PINNED NAVBAR (PRESERVED FROM LANDING PAGE)        -->
+  <!-- ========================================================= -->
+  <header class="sticky top-0 z-40 bg-newsprint/90 backdrop-blur-md border-b-2 border-carbon px-4 sm:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Logo & Brand Badge -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="switchSuiteView('landing'); playClickSound()">
+          <span class="font-display text-2xl font-black tracking-tight text-carbon">TRUTH//PRINT</span>
+          <span class="stamp text-crimson text-xs -rotate-2 bg-crimson/5">ATS-READY</span>
+        </div>
+        <span class="hidden md:inline-block font-mono text-xs text-carbon/60">v0.9-byok</span>
+      </div>
+
+      <!-- Center View Switcher Tabs (Unlocks all 6 functional screens) -->
+      <nav class="flex flex-wrap items-center gap-1 font-mono text-xs">
+        <button id="nav-btn-landing" onclick="switchSuiteView('landing'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-ochre text-carbon shadow-brutal-sm">
+          01. Landing Atelier
+        </button>
+        <button id="nav-btn-vault" onclick="switchSuiteView('vault'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm">
+          02. Master Vault
+        </button>
+        <button id="nav-btn-tailor" onclick="switchSuiteView('tailor'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm">
+          03. Tailoring Studio
+        </button>
+        <button id="nav-btn-diag" onclick="switchSuiteView('diag'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm">
+          04. ATS Diagnostic
+        </button>
+        <button id="nav-btn-keys" onclick="switchSuiteView('keys'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm">
+          05. BYOK Vault
+        </button>
+        <button id="nav-btn-versions" onclick="switchSuiteView('versions'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm">
+          06. Version DAG
+        </button>
+        <button id="nav-btn-export" onclick="switchSuiteView('export'); playClickSound()" class="px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm">
+          07. Export Tray
+        </button>
+      </nav>
+
+      <!-- Right Action Tools: Audio Toggle, Master Vault, Launch Ticket -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        
+        <!-- Sound FX Switcher -->
+        <button id="audio-toggle" onclick="toggleAudio()" class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-medium border border-carbon rounded bg-white hover:bg-kraft shadow-brutal-sm" title="Toggle Mechanical Typewriter & Stamp Clicks">
+          <span id="sound-icon">🔊</span>
+          <span class="hidden sm:inline" id="sound-text">FX: ON</span>
+        </button>
+
+        <button onclick="switchSuiteView('vault'); playPaperSound()" class="font-mono text-xs font-bold uppercase underline underline-offset-4 decoration-ochre decoration-2 hover:text-ochre transition-colors">
+          Master Vault
+        </button>
+
+        <!-- Perforated Ticket CTA Button -->
+        <button onclick="openDrawer(); playStampSound()" class="perforated-ticket text-white font-mono text-xs font-bold px-4 py-2 hover:bg-carbon/90 shadow-brutal flex items-center gap-2">
+          <span>LAUNCH STUDIO</span>
+          <span>→</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 1: EXACT 100% PRESERVED LANDING PAGE ATELIER         -->
+  <!-- ========================================================= -->
+  <div id="view-landing" class="suite-view">
+<!-- ========================================================= -->
+  <!-- 2. HERO SECTION                                           -->
+  <!-- ========================================================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 pt-8 pb-16">
+    
+    <!-- Top Decorative Announcement Tape -->
+    <div class="flex justify-center mb-6">
+      <div class="washi-tape px-6 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-carbon transform -rotate-1 border border-carbon/20 shadow-sm flex items-center gap-3">
+        <span>⚡ 100% Free Via BYOK Architecture</span>
+        <span class="hidden sm:inline text-carbon/40">•</span>
+        <span class="hidden sm:inline font-hand text-base font-bold text-carbon/90">Client-Side Vault & Offline Tectonic Ready</span>
+      </div>
+    </div>
+
+    <!-- Editorial Big Typography Grid -->
+    <div class="relative mb-12">
+      
+      <!-- Handwritten Margin Annotation -->
+      <div class="absolute -top-6 right-2 sm:right-16 md:right-32 font-hand text-xl sm:text-2xl text-crimson transform rotate-6 select-none pointer-events-none flex items-center gap-1">
+        <span>← Zero token waste, pure math.</span>
+      </div>
+
+      <h1 class="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight uppercase max-w-5xl">
+        YOUR RAW EXPERIENCE. <br>
+        <span class="font-serif italic font-normal text-crimson lowercase tracking-normal text-4xl sm:text-6xl lg:text-7xl">never fabricated.</span> <br>
+        <span class="relative inline-block">
+          PIXEL-PERFECT ATS RESUMES.
+          <!-- Scribble Underline -->
+          <svg class="absolute -bottom-3 left-0 w-full h-3 text-ochre -z-10" viewBox="0 0 400 12" fill="none" preserveAspectRatio="none">
+            <path d="M3 9C120 2 280 2 397 8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </h1>
+      
+      <p class="mt-6 text-lg sm:text-xl text-carbon/80 max-w-2xl font-body font-medium leading-relaxed">
+        Stop feeding hallucinating LLMs that invent unearned senior titles. We ground your career in an immutable JSON schema, optimize tokens with laser-sharp diffs, and compile directly to clean, single-column LaTeX & ATS PDF.
+      </p>
+
+      <!-- Tactical Buttons Row -->
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <button onclick="openDrawer(); playStampSound()" class="bg-carbon text-white font-mono text-sm font-bold px-6 py-3.5 shadow-brutal hover:bg-carbon/90 flex items-center gap-3">
+          <span>COMPOSE MY RESUME</span>
+          <span class="bg-ochre text-carbon text-xs px-2 py-0.5 rounded font-black">LATEX + PDF</span>
+        </button>
+
+        <button onclick="scrollToLab(); playClickSound()" class="bg-kraft text-carbon font-mono text-sm font-bold px-6 py-3.5 border-2 border-carbon shadow-brutal hover:bg-white flex items-center gap-2">
+          <span>TEST TRUTH-GUARD LAB</span>
+          <span>↓</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- HERO SCRAPBOOK COLLAGE CONTAINER (Interactive Media)     -->
+    <!-- ========================================================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mt-6">
+      
+      <!-- Left Hero Collage Card: Live Token Surgery & LaTeX Engine View -->
+      <div class="lg:col-span-7 bg-white border-2 border-carbon shadow-brutal-lg p-5 sm:p-7 relative rounded-sm">
+        
+        <!-- Brass Pushpin visual in corner -->
+        <div class="pushpin -top-2 left-6"></div>
+        <div class="pushpin -top-2 right-6"></div>
+
+        <!-- Card Header with Stamped Status -->
+        <div class="flex items-center justify-between border-b-2 border-carbon pb-4 mb-4">
+          <div>
+            <span class="font-mono text-xs uppercase tracking-wider text-carbon/60">Live Telemetry & Diagnostics</span>
+            <h2 class="font-display font-black text-xl text-carbon">TOKEN SURGERY HUD</h2>
+          </div>
+          <span class="stamp text-mint text-xs rotate-1 bg-mint/10">[1-PAGE BUDGET: MET]</span>
+        </div>
+
+        <!-- Live Ticking Token Monitor Widget -->
+        <div class="bg-kraft border border-carbon p-4 rounded-sm grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 font-mono">
+          <div class="border-r border-carbon/20 pr-2">
+            <div class="text-[10px] text-carbon/60 uppercase">Prompt Tokens</div>
+            <div class="text-lg font-bold text-carbon" id="counter-prompt">412 tok</div>
+            <span class="text-[10px] text-mint font-semibold">↓ 68% minified</span>
+          </div>
+          <div class="border-r border-carbon/20 pr-2">
+            <div class="text-[10px] text-carbon/60 uppercase">Completion</div>
+            <div class="text-lg font-bold text-carbon" id="counter-completion">84 tok</div>
+            <span class="text-[10px] text-blueprint font-semibold">Diff-only patch</span>
+          </div>
+          <div class="border-r border-carbon/20 pr-2">
+            <div class="text-[10px] text-carbon/60 uppercase">Est. Cost</div>
+            <div class="text-lg font-bold text-carbon">$0.0001</div>
+            <span class="text-[10px] text-carbon/70">BYOK direct</span>
+          </div>
+          <div>
+            <div class="text-[10px] text-carbon/60 uppercase">Parse Status</div>
+            <div class="text-lg font-bold text-mint">100% ATS</div>
+            <span class="text-[10px] text-carbon/70">Single-col TeX</span>
+          </div>
+        </div>
+
+        <!-- Snippet Preview: TeX Syntax Box -->
+        <div class="bg-carbon text-gray-200 font-mono text-xs p-4 rounded-sm border border-carbon relative overflow-hidden">
+          <div class="flex items-center justify-between text-gray-400 border-b border-gray-700 pb-2 mb-2 text-[11px]">
+            <span>template.tex (Tectonic Compiler)</span>
+            <span class="text-ochre">Single-Column Strict Linear</span>
+          </div>
+          <pre class="overflow-x-auto text-gray-300 leading-relaxed font-mono">
+\begin{document}
+  \textbf{\Huge \scshape \VAR{candidate.name}}
+  \href{mailto:\VAR{candidate.email}}{\VAR{candidate.email}} $|$ \VAR{candidate.phone}
+
+  \section{Technical Experience}
+  \resumeSubheading{\VAR{role.title}}{\VAR{role.period}}{\VAR{role.company}}{\VAR{role.loc}}
+  \resumeItemListStart
+    \resumeItem{\textbf{Grounding Verified:} Orchestrated container pods handling 4.2M req/day...}
+  \resumeItemListEnd
+\end{document}</pre>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between font-mono text-xs text-carbon/70">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-mint"></span>
+            Zero Puppeteer/Chrome Bloat • Native Rust Core
+          </span>
+          <button onclick="openDrawer(); playClickSound()" class="underline font-bold hover:text-carbon">Inspect TeX Script →</button>
+        </div>
+
+      </div>
+
+      <!-- Right Hero Collage Card: Interactive Multimedia Atelier Video Player & Sticky Note -->
+      <div class="lg:col-span-5 flex flex-col gap-6">
+        
+        <!-- Video / Interactive Media Mockup Box -->
+        <div class="bg-kraft border-2 border-carbon shadow-brutal p-4 relative rounded-sm">
+          
+          <!-- Diagonal Tape Strip -->
+          <div class="washi-tape absolute -top-3 left-10 px-4 py-0.5 font-hand font-bold text-sm transform -rotate-3 border border-carbon/20">
+            Interactive Walkthrough
+          </div>
+
+          <!-- Video Simulation Frame -->
+          <div class="relative bg-carbon aspect-video rounded-sm overflow-hidden flex flex-col justify-between p-3 text-white border border-carbon group">
+            
+            <!-- Video Mock Header -->
+            <div class="flex justify-between items-center text-xs font-mono text-gray-400">
+              <span class="flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-crimson animate-ping"></span>
+                LIVE LAB OVERVIEW
+              </span>
+              <span>0:45 / 2:30</span>
+            </div>
+
+            <!-- Simulated Play / Pause Interactive Center -->
+            <div class="flex flex-col items-center justify-center cursor-pointer" onclick="toggleMediaMock(); playClickSound()">
+              <div id="media-play-btn" class="w-12 h-12 rounded-full bg-white text-carbon flex items-center justify-center font-black text-xl shadow-brutal hover:scale-105 transition-transform">
+                ▶
+              </div>
+              <span id="media-caption" class="font-mono text-xs mt-2 text-gray-300">Click to preview tailoring stream</span>
+            </div>
+
+            <!-- Media Scrub Bar -->
+            <div class="space-y-1">
+              <div class="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                <div id="media-progress" class="bg-ochre h-full w-1/3 transition-all duration-300"></div>
+              </div>
+              <div class="flex justify-between text-[10px] font-mono text-gray-400">
+                <span>Diff Approval Gate</span>
+                <span>Tectonic PDF Engine</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mt-3 flex items-center justify-between font-mono text-xs text-carbon">
+            <span>Sound FX & Voice Guidance</span>
+            <span class="stamp text-blueprint text-[10px]">[BYOK TELEMETRY]</span>
+          </div>
+
+        </div>
+
+        <!-- Sticky Note: Real candidate feedback card -->
+        <div class="bg-[#FFF9C4] border-2 border-carbon shadow-brutal p-4 relative transform rotate-1 rounded-sm">
+          <!-- Paper clip graphic in corner -->
+          <div class="absolute -top-3 right-4 w-4 h-8 border-2 border-carbon rounded-full bg-transparent"></div>
+
+          <span class="font-hand text-lg font-bold text-carbon/70 uppercase">Field Note #42</span>
+          <p class="font-hand text-xl font-bold text-carbon leading-snug mt-1">
+            "Most AI resume builders inject imaginary skills that lead to instant rejection in tech interviews. TRUTH//PRINT's diff approval kept me 100% honest and got me past the Citadel & Swiggy ATS filters."
+          </p>
+          <div class="mt-3 flex items-center justify-between font-mono text-xs border-t border-carbon/20 pt-2 text-carbon/70">
+            <span>Siddharth M. (Bangalore)</span>
+            <span class="font-bold text-mint">Verified ATS Pass</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 3. INTERACTIVE "TRUTH-GUARD" DEMONSTRATION LAB            -->
+    <!-- ========================================================= -->
+    <section id="demo-lab" class="mt-20 border-t-2 border-carbon pt-12">
+      
+      <!-- Section Title & Badge -->
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="stamp text-crimson text-xs bg-crimson/10 font-bold">[ADR-0005 ENFORCED]</span>
+            <span class="font-mono text-xs font-bold text-carbon uppercase">Interactive Comparative Lab</span>
+          </div>
+          <h2 class="font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-carbon">
+            THE TRUTH-GUARD IN ACTION
+          </h2>
+        </div>
+
+        <!-- Role Selector Buttons -->
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <span class="font-bold text-carbon/70 mr-1">Select JD:</span>
+          <button onclick="switchRole('backend'); playClickSound()" id="role-btn-backend" class="px-3 py-1.5 border-2 border-carbon bg-carbon text-white font-bold rounded-sm shadow-brutal-sm">
+            Backend / Rust
+          </button>
+          <button onclick="switchRole('fullstack'); playClickSound()" id="role-btn-fullstack" class="px-3 py-1.5 border-2 border-carbon bg-white text-carbon font-bold rounded-sm shadow-brutal-sm hover:bg-kraft">
+            Full Stack (TS)
+          </button>
+        </div>
+      </div>
+
+      <!-- Split Card Grid: Raw JD vs Generic AI vs Truth-Guarded Engine -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        
+        <!-- Column 1: The Job Description Requirement -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-5 flex flex-col justify-between rounded-sm relative">
+          <div class="washi-tape absolute -top-3 left-6 px-3 py-0.5 font-mono text-[10px] font-bold text-carbon uppercase">
+            Target Job Spec
+          </div>
+          <div>
+            <h3 class="font-mono text-xs uppercase text-carbon/60 mt-2 font-bold tracking-wider">01 / Recruiter Requirement</h3>
+            <div id="lab-jd-title" class="font-display font-black text-lg text-carbon mt-1">High-Throughput Distributed Systems</div>
+            
+            <div class="mt-4 p-3 bg-kraft border border-carbon/40 rounded-sm font-mono text-xs leading-relaxed text-carbon" id="lab-jd-text">
+              "Seeking engineers proficient in async task queuing, low-latency microservices, Redis pipelines, and zero-downtime database migrations under heavy write load."
+            </div>
+          </div>
+
+          <div class="mt-6 pt-3 border-t border-carbon/20 font-mono text-xs text-carbon/60 flex items-center justify-between">
+            <span>Source: ATS Extraction</span>
+            <span class="font-bold text-carbon">Keywords: 6 Required</span>
+          </div>
+        </div>
+
+        <!-- Column 2: What Generic AI Hallucinates (Crossed Out / Rejected) -->
+        <div class="bg-[#FFF5F5] border-2 border-crimson shadow-brutal p-5 flex flex-col justify-between rounded-sm relative">
+          <div class="absolute -top-3 right-6">
+            <span class="stamp text-crimson text-xs bg-white rotate-3 font-bold shadow-sm">[HALLUCINATION DETECTED]</span>
+          </div>
+          
+          <div>
+            <h3 class="font-mono text-xs uppercase text-crimson font-bold tracking-wider mt-2">02 / Generic AI Output</h3>
+            <div class="font-display font-black text-lg text-carbon mt-1">Unbounded Fabrication</div>
+
+            <div class="mt-4 p-3 bg-white border border-crimson/40 rounded-sm font-mono text-xs leading-relaxed text-crimson line-through decoration-crimson decoration-2" id="lab-fake-text">
+              "Led architecture for global Redis cluster handling 500,000 writes/sec, boosting company revenue by $4.2M while managing 12 distributed database shards."
+            </div>
+
+            <div class="mt-3 flex items-center gap-1.5 text-crimson font-mono text-xs font-bold">
+              <span>✕</span>
+              <span>Candidate never worked at that scale! Fabricated metrics will fail technical interview.</span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-3 border-t border-crimson/20 font-mono text-xs text-crimson/80 flex items-center justify-between">
+            <span>Result: Blacklisted by ATS</span>
+            <span class="font-bold">Score: 0/100</span>
+          </div>
+        </div>
+
+        <!-- Column 3: The Truth-Guarded ATS Output (Approved & Grounded) -->
+        <div class="bg-[#F0FDF4] border-2 border-mint shadow-brutal p-5 flex flex-col justify-between rounded-sm relative">
+          <div class="absolute -top-3 right-6">
+            <span class="stamp text-mint text-xs bg-white -rotate-2 font-bold shadow-sm">[TRUTH-GUARDED: APPROVED]</span>
+          </div>
+          
+          <div>
+            <h3 class="font-mono text-xs uppercase text-mint font-bold tracking-wider mt-2">03 / TRUTH//PRINT Output</h3>
+            <div class="font-display font-black text-lg text-carbon mt-1">Grounded & Tailored</div>
+
+            <div class="mt-4 p-3 bg-white border border-mint/40 rounded-sm font-mono text-xs leading-relaxed text-carbon" id="lab-true-text">
+              "Streamlined asynchronous event workers using BullMQ and Redis backoff retries, ensuring 100% idempotent transaction delivery across background tasks."
+            </div>
+
+            <div class="mt-3 p-2 bg-mint/10 border border-mint/30 rounded-sm text-carbon font-mono text-[11px]">
+              <span class="font-bold text-mint block">✓ Grounded Reference:</span>
+              <span id="lab-source-ref">Source ID: project_ref_02 ('Async Pipeline Engine')</span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-3 border-t border-mint/30 font-mono text-xs text-mint font-bold flex items-center justify-between">
+            <span>Honest ATS Match: 94%</span>
+            <button onclick="openDrawer(); playStampSound()" class="underline hover:text-carbon">Inspect TeX Diff →</button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 4. SWISS TYPOGRAPHIC 4-COLUMN ARCHITECTURE GRID          -->
+    <!-- ========================================================= -->
+    <section class="mt-20 border-t-2 border-carbon pt-12">
+      
+      <div class="mb-8">
+        <span class="font-mono text-xs uppercase font-bold text-carbon/60 tracking-wider">Engine Architecture</span>
+        <h2 class="font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-carbon">
+          BUILT FOR DEVELOPERS & PRAGMATISTS
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Card 01 -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-6 flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+          <div>
+            <span class="font-serif italic text-4xl text-carbon/30 group-hover:text-ochre transition-colors">01</span>
+            <h3 class="font-display font-black text-xl uppercase mt-2 text-carbon">ZERO HOSTED BILLING</h3>
+            <p class="font-body text-sm text-carbon/80 mt-3 leading-relaxed">
+              Plug in your own OpenAI, Anthropic, Gemini, Groq, or local Ollama API keys. Credentials reside strictly in client OS Keychains or encrypted memory. Zero server storage.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-carbon/20 font-mono text-xs font-bold text-blueprint flex items-center justify-between">
+            <span>BYOK Vault</span>
+            <span>ADR-0010</span>
+          </div>
+        </div>
+
+        <!-- Card 02 -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-6 flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+          <div>
+            <span class="font-serif italic text-4xl text-carbon/30 group-hover:text-ochre transition-colors">02</span>
+            <h3 class="font-display font-black text-xl uppercase mt-2 text-carbon">TOKEN SURGERY</h3>
+            <p class="font-body text-sm text-carbon/80 mt-3 leading-relaxed">
+              Pre-flight schema trimming, prompt minification, and RFC 6902 JSON patch diffs. Save 50% to 75% on token costs while keeping input within free-tier provider limits.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-carbon/20 font-mono text-xs font-bold text-mint flex items-center justify-between">
+            <span>AI Skills Pkg</span>
+            <span>ADR-0011</span>
+          </div>
+        </div>
+
+        <!-- Card 03 -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-6 flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+          <div>
+            <span class="font-serif italic text-4xl text-carbon/30 group-hover:text-ochre transition-colors">03</span>
+            <h3 class="font-display font-black text-xl uppercase mt-2 text-carbon">DUAL-EXPORT ENGINE</h3>
+            <p class="font-body text-sm text-carbon/80 mt-3 leading-relaxed">
+              Dual output on every run: Download standard compiled ATS PDFs via embedded Tectonic, or grab the raw, clean `.tex` LaTeX script to customize on Overleaf.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-carbon/20 font-mono text-xs font-bold text-crimson flex items-center justify-between">
+            <span>Tectonic Core</span>
+            <span>ADR-0013</span>
+          </div>
+        </div>
+
+        <!-- Card 04 -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-6 flex flex-col justify-between hover:-translate-y-1 transition-transform group">
+          <div>
+            <span class="font-serif italic text-4xl text-carbon/30 group-hover:text-ochre transition-colors">04</span>
+            <h3 class="font-display font-black text-xl uppercase mt-2 text-carbon">MASTER RAG VAULT</h3>
+            <p class="font-body text-sm text-carbon/80 mt-3 leading-relaxed">
+              Store 50+ detailed project metrics and impact achievements. When a job description is pasted, local vector search extracts only the most relevant verified facts for a 1-page fit.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-carbon/20 font-mono text-xs font-bold text-carbon flex items-center justify-between">
+            <span>SQLite-Vec</span>
+            <span>ADR-0012</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 5. BOTTOM PERFORATED TICKET ACTION BANNER                -->
+    <!-- ========================================================= -->
+    <div class="mt-20 bg-carbon text-white p-6 sm:p-10 border-2 border-carbon shadow-brutal-lg relative overflow-hidden rounded-sm">
+      
+      <!-- Left & right ticket punch notches -->
+      <div class="absolute -left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-newsprint border-2 border-carbon"></div>
+      <div class="absolute -right-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-newsprint border-2 border-carbon"></div>
+
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 px-4">
+        <div>
+          <span class="stamp text-ochre text-xs bg-ochre/10 border-ochre mb-2 inline-block">[NATIVE DESKTOP & WEB PWA]</span>
+          <h2 class="font-display font-black text-2xl sm:text-4xl uppercase tracking-tight">
+            READY TO COMPILE YOUR HONEST RESUME?
+          </h2>
+          <p class="font-mono text-xs text-gray-300 mt-2">
+            No subscription traps. No cloud hallucination. Zero hidden costs.
+          </p>
+        </div>
+
+        <button onclick="openDrawer(); playStampSound()" class="w-full md:w-auto px-8 py-4 bg-ochre text-carbon font-mono font-black text-sm uppercase tracking-wider hover:bg-white transition-colors shadow-brutal flex items-center justify-center gap-2">
+          <span>ENTER TAILORING STUDIO</span>
+          <span>→</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 2: MASTER EXPERIENCE VAULT & PROFILE HUB             -->
+  <!-- ========================================================= -->
+  <div id="view-vault" class="suite-view hidden">
+<!-- ========================================================= -->
+  <!-- PAGE 2: MASTER EXPERIENCE VAULT & PROFILE HUB             -->
+  <!-- ========================================================= -->
+  <section id="vault-subview" class="max-w-7xl mx-auto px-4 sm:px-8 pt-8 pb-24">
+    
+    <!-- Vault Header & Live Budget Ticker -->
+    <div class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-carbon pb-6 mb-8">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="stamp text-blueprint text-xs bg-cyanprint/10 font-bold">[SCHEMA: RESUME.SCHEMA.JSON]</span>
+          <span class="font-mono text-xs text-carbon/60 uppercase">Client-Side Memory Bank</span>
+        </div>
+        <h1 class="font-display font-black text-3xl sm:text-5xl uppercase tracking-tight text-carbon">
+          MASTER EXPERIENCE VAULT
+        </h1>
+        <p class="font-body text-sm text-carbon/70 mt-1 max-w-xl">
+          Your unconstrained career catalog. Add every technical nuance here. Use toggles to index items into the <strong class="text-carbon">⭐ Master RAG Memory</strong> or pin them to the <strong class="text-carbon">📄 1-Page Active ATS Draft</strong>.
+        </p>
+      </div>
+
+      <!-- Live 1-Page Budget Gauge -->
+      <div class="bg-white border-2 border-carbon shadow-brutal p-4 rounded-sm font-mono text-xs flex flex-col gap-2 min-w-[260px]">
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-carbon uppercase">1-Page ATS Budget:</span>
+          <span id="budget-status" class="stamp text-mint text-[10px] bg-mint/10 font-bold">14/20 Lines (70%)</span>
+        </div>
+        <div class="w-full bg-kraft h-2.5 rounded-full overflow-hidden border border-carbon">
+          <div id="budget-bar" class="bg-mint h-full w-[70%] transition-all duration-300"></div>
+        </div>
+        <div class="flex justify-between text-[10px] text-carbon/60">
+          <span>Safe Density</span>
+          <span>Max ATS 1-Page Cap</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Index-Card Navigation Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6 font-mono text-xs">
+      <button onclick="switchVaultTab('exp'); playClickSound()" id="tab-v-exp" class="px-4 py-2 border-2 border-carbon bg-carbon text-white font-bold rounded-t shadow-brutal-sm">
+        💼 01 / Work Experience (<span id="count-exp">2</span>)
+      </button>
+      <button onclick="switchVaultTab('proj'); playClickSound()" id="tab-v-proj" class="px-4 py-2 border-2 border-carbon bg-white text-carbon font-bold rounded-t shadow-brutal-sm hover:bg-kraft">
+        🛠️ 02 / Projects & Builds (<span id="count-proj">2</span>)
+      </button>
+      <button onclick="switchVaultTab('skills'); playClickSound()" id="tab-v-skills" class="px-4 py-2 border-2 border-carbon bg-white text-carbon font-bold rounded-t shadow-brutal-sm hover:bg-kraft">
+        ⚡ 03 / Skills & Tools
+      </button>
+      <button onclick="switchVaultTab('india'); playClickSound()" id="tab-v-india" class="px-4 py-2 border-2 border-carbon bg-white text-carbon font-bold rounded-t shadow-brutal-sm hover:bg-kraft">
+        🇮🇳 04 / India Market Conventions
+      </button>
+      <button onclick="switchVaultTab('schema'); playClickSound()" id="tab-v-schema" class="px-4 py-2 border-2 border-carbon bg-white text-carbon font-bold rounded-t shadow-brutal-sm hover:bg-kraft ml-auto">
+        { } Raw JSON Schema
+      </button>
+    </div>
+
+    <!-- VAULT TAB 1: WORK EXPERIENCE -->
+    <div id="panel-v-exp" class="space-y-6">
+      
+      <!-- New Entry Quick Form Box -->
+      <div class="bg-kraft border-2 border-carbon shadow-brutal p-5 rounded-sm relative">
+        <div class="washi-tape absolute -top-3 left-6 px-3 py-0.5 font-mono text-[10px] font-bold text-carbon uppercase">
+          Add Career Milestone
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <div>
+            <label class="block font-mono text-xs uppercase font-bold text-carbon/70 mb-1">Company / Org</label>
+            <input type="text" id="new-exp-company" placeholder="e.g. Swiggy, Zerodha, Google" class="w-full bg-white border border-carbon px-3 py-2 font-body text-xs rounded-sm focus:outline-none focus:ring-2 focus:ring-ochre">
+          </div>
+          <div>
+            <label class="block font-mono text-xs uppercase font-bold text-carbon/70 mb-1">Role / Title</label>
+            <input type="text" id="new-exp-role" placeholder="e.g. Senior Backend Engineer" class="w-full bg-white border border-carbon px-3 py-2 font-body text-xs rounded-sm focus:outline-none focus:ring-2 focus:ring-ochre">
+          </div>
+          <div>
+            <label class="block font-mono text-xs uppercase font-bold text-carbon/70 mb-1">Timeline</label>
+            <input type="text" id="new-exp-period" placeholder="e.g. 2023 — Present" class="w-full bg-white border border-carbon px-3 py-2 font-body text-xs rounded-sm focus:outline-none focus:ring-2 focus:ring-ochre">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block font-mono text-xs uppercase font-bold text-carbon/70 mb-1">
+            Quantified Achievement Bullet <span class="font-hand text-crimson text-sm normal-case">(Include real metrics: % speed, req/sec, scale)</span>
+          </label>
+          <textarea id="new-exp-bullet" rows="2" placeholder="e.g. Scaled Redis asynchronous task workers using BullMQ, cutting p99 payload latency by 42% under 8M daily event volume." class="w-full bg-white border border-carbon px-3 py-2 font-body text-xs rounded-sm focus:outline-none focus:ring-2 focus:ring-ochre"></textarea>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+          <span class="font-mono text-xs text-carbon/60">Truthfulness Rule: Grounded references are assigned immutable UUIDs.</span>
+          <button onclick="addExperience(); playStampSound()" class="px-5 py-2 bg-carbon text-white font-mono text-xs font-bold uppercase rounded-sm shadow-brutal-sm hover:bg-ochre hover:text-carbon transition">
+            + Append to Master Vault
+          </button>
+        </div>
+      </div>
+
+      <!-- Existing Experience Cards List -->
+      <div id="experience-list" class="space-y-4">
+        <!-- Card 1 -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-5 rounded-sm relative" id="exp-card-1">
+          <div class="flex flex-wrap items-start justify-between gap-2 border-b border-carbon/20 pb-3 mb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-display font-black text-lg text-carbon">Senior Systems Engineer</h3>
+                <span class="stamp text-mint text-[10px]">[VERIFIED GROUNDING]</span>
+              </div>
+              <p class="font-mono text-xs text-carbon/70">Distributed Cache Systems • Bengaluru, India • 2023 – Present</p>
+            </div>
+            
+            <!-- Dual Toggles: RAG vs 1-Page Draft -->
+            <div class="flex items-center gap-3 bg-kraft px-3 py-1.5 border border-carbon rounded-sm font-mono text-xs">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" checked onchange="toggleCardStatus('exp-card-1', 'rag', this.checked); playClickSound()" class="accent-ochre w-3.5 h-3.5">
+                <span class="font-bold text-carbon">⭐ RAG Memory</span>
+              </label>
+              <span class="text-carbon/30">|</span>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" checked onchange="toggleCardStatus('exp-card-1', 'page', this.checked); playClickSound()" class="accent-mint w-3.5 h-3.5">
+                <span class="font-bold text-mint">📄 1-Page Draft</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="font-body text-xs text-carbon space-y-2">
+            <div class="p-2.5 bg-newsprint border border-carbon/20 rounded font-mono text-[11px] flex justify-between items-center">
+              <span>• Architected async queue pipeline in Rust handling 12,000 req/sec with sub-15ms p99 latency.</span>
+              <span class="text-carbon/40 text-[9px] uppercase">ID: exp_01_a</span>
+            </div>
+            <div class="p-2.5 bg-newsprint border border-carbon/20 rounded font-mono text-[11px] flex justify-between items-center">
+              <span>• Integrated transactional outbox pattern with Redis, ensuring 100% idempotent worker delivery.</span>
+              <span class="text-carbon/40 text-[9px] uppercase">ID: exp_01_b</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white border-2 border-carbon shadow-brutal p-5 rounded-sm relative" id="exp-card-2">
+          <div class="flex flex-wrap items-start justify-between gap-2 border-b border-carbon/20 pb-3 mb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-display font-black text-lg text-carbon">Cloud Software Engineer</h3>
+                <span class="stamp text-mint text-[10px]">[VERIFIED GROUNDING]</span>
+              </div>
+              <p class="font-mono text-xs text-carbon/70">Edge Infrastructure Labs • Hyderabad, India • 2021 – 2023</p>
+            </div>
+
+            <div class="flex items-center gap-3 bg-kraft px-3 py-1.5 border border-carbon rounded-sm font-mono text-xs">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" checked onchange="toggleCardStatus('exp-card-2', 'rag', this.checked); playClickSound()" class="accent-ochre w-3.5 h-3.5">
+                <span class="font-bold text-carbon">⭐ RAG Memory</span>
+              </label>
+              <span class="text-carbon/30">|</span>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" checked onchange="toggleCardStatus('exp-card-2', 'page', this.checked); playClickSound()" class="accent-mint w-3.5 h-3.5">
+                <span class="font-bold text-mint">📄 1-Page Draft</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="font-body text-xs text-carbon space-y-2">
+            <div class="p-2.5 bg-newsprint border border-carbon/20 rounded font-mono text-[11px] flex justify-between items-center">
+              <span>• Managed Kubernetes clusters across 4 AWS multi-regions, decreasing cloud spend by 32%.</span>
+              <span class="text-carbon/40 text-[9px] uppercase">ID: exp_02_a</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VAULT TAB 2: PROJECTS & BUILDS -->
+    <div id="panel-v-proj" class="space-y-6 hidden">
+      <div class="bg-white border-2 border-carbon shadow-brutal p-5 rounded-sm">
+        <div class="flex justify-between items-start border-b border-carbon/20 pb-3 mb-3">
+          <div>
+            <h3 class="font-display font-black text-lg text-carbon">RefNet — P2P Job Referral Protocol</h3>
+            <p class="font-mono text-xs text-carbon/60">Rust • SQLite-vec • UniFFI • Jetpack Compose</p>
+          </div>
+          <span class="stamp text-ochre text-[10px]">[INDEXED IN RAG]</span>
+        </div>
+        <p class="font-body text-xs text-carbon/90">
+          Engineered decentralized candidate referral protocol with zero-knowledge proof verification. Leveraged local vector embeddings to match job specs without cloud indexing.
+        </p>
+        <div class="mt-3 flex items-center justify-between font-mono text-xs text-carbon/60 pt-2 border-t border-carbon/10">
+          <span>GitHub: github.com/candidate/refnet</span>
+          <span class="text-mint font-bold">Included in Tailoring Prompts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAULT TAB 3: TECHNICAL SKILLS -->
+    <div id="panel-v-skills" class="space-y-6 hidden">
+      <div class="bg-white border-2 border-carbon shadow-brutal p-6 rounded-sm">
+        <h3 class="font-display font-black text-xl text-carbon mb-4">VERIFIED SKILLS TAXONOMY</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="p-3 bg-kraft border border-carbon">
+            <span class="font-bold text-carbon block border-b border-carbon/20 pb-1 mb-2">Languages</span>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">Rust</span>
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">TypeScript</span>
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">Go</span>
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">SQL</span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-kraft border border-carbon">
+            <span class="font-bold text-carbon block border-b border-carbon/20 pb-1 mb-2">Systems & Cloud</span>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">Docker</span>
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">Kubernetes</span>
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">Redis</span>
+              <span class="px-2 py-0.5 bg-white border border-carbon text-[11px]">PostgreSQL</span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-kraft border border-carbon">
+            <span class="font-bold text-carbon block border-b border-carbon/20 pb-1 mb-2">ATS Rules</span>
+            <p class="font-body text-[11px] text-carbon/80 mt-1">
+              Deterministic skill aliases enabled. 'Postgres' maps to 'PostgreSQL' automatically in keyword audits.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAULT TAB 4: INDIA MARKET CONVENTIONS -->
+    <div id="panel-v-india" class="space-y-6 hidden">
+      <div class="bg-white border-2 border-carbon shadow-brutal p-6 rounded-sm max-w-3xl">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="stamp text-ochre text-xs">[ADR-0009 COMPLIANT]</span>
+          <h3 class="font-display font-black text-xl text-carbon uppercase">India Hiring Conventions</h3>
+        </div>
+        <p class="font-body text-xs text-carbon/70 mb-6">
+          Tailored for Indian tech recruiting norms. Fields marked <strong class="text-crimson">Confidential</strong> are stored in your encrypted vault and <strong class="text-carbon">never rendered onto public ATS resumes</strong> unless explicitly unmasked.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 font-mono text-xs">
+          <!-- Notice Period -->
+          <div class="p-4 bg-kraft border border-carbon">
+            <label class="block font-bold text-carbon uppercase mb-2">Official Notice Period</label>
+            <select class="w-full bg-white border border-carbon p-2 text-xs rounded-sm focus:ring-2 focus:ring-ochre">
+              <option selected>Immediate (Available now)</option>
+              <option>15 Days</option>
+              <option>30 Days (Standard buyout possible)</option>
+              <option>60 Days</option>
+              <option>90 Days</option>
+            </select>
+            <span class="text-[10px] text-carbon/60 block mt-2">Critical filter for Indian Tier-1 recruiters.</span>
+          </div>
+
+          <!-- Private Expected CTC -->
+          <div class="p-4 bg-kraft border border-carbon">
+            <div class="flex justify-between items-center mb-2">
+              <label class="font-bold text-carbon uppercase">Expected CTC (INR)</label>
+              <span class="stamp text-crimson text-[9px] bg-crimson/10 font-bold">CONFIDENTIAL</span>
+            </div>
+            <input type="text" value="₹ 32,00,000 / year" class="w-full bg-white border border-carbon p-2 text-xs rounded-sm focus:ring-2 focus:ring-ochre">
+            <span class="text-[10px] text-crimson font-semibold block mt-2">🔒 Never injected into LaTeX or PDF exports.</span>
+          </div>
+
+          <!-- Location & Remote Preference -->
+          <div class="p-4 bg-kraft border border-carbon sm:col-span-2">
+            <label class="block font-bold text-carbon uppercase mb-2">Current Location & Mobility</label>
+            <input type="text" value="Bengaluru, Karnataka • Willing to relocate to Pune / Hyderabad / NCR" class="w-full bg-white border border-carbon p-2 text-xs rounded-sm focus:ring-2 focus:ring-ochre">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAULT TAB 5: RAW JSON SCHEMA VIEW -->
+    <div id="panel-v-schema" class="space-y-6 hidden">
+      <div class="bg-carbon text-gray-200 border-2 border-carbon p-5 rounded font-mono text-xs overflow-x-auto">
+        <div class="flex justify-between items-center text-gray-400 border-b border-gray-700 pb-2 mb-3">
+          <span>resume.schema.json (Canonical Source of Truth)</span>
+          <span class="text-mint font-bold">100% Schema Valid</span>
+        </div>
+        <pre class="text-green-400 leading-relaxed font-mono" id="schema-json-preview">
+{
+  "$schema": "https://json-resume.org/schema/v1.0.0",
+  "basics": {
+    "name": "Keshav Sharma",
+    "label": "Senior Systems Engineer",
+    "email": "keshav@example.com",
+    "phone": "+91 98765 43210",
+    "location": { "city": "Bengaluru", "region": "Karnataka", "countryCode": "IN" }
+  },
+  "work": [
+    {
+      "id": "exp_01",
+      "company": "Distributed Cache Systems",
+      "position": "Senior Systems Engineer",
+      "startDate": "2023-01",
+      "highlights": [
+        "Architected async queue pipeline in Rust handling 12,000 req/sec with sub-15ms p99 latency.",
+        "Integrated transactional outbox pattern with Redis, ensuring 100% idempotent worker delivery."
+      ]
+    }
+  ]
+}</pre>
+      </div>
+    </div>
+
+  </section>
+
+  
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 3: TAILORING STUDIO & DIFF REVIEW WORKSPACE          -->
+  <!-- ========================================================= -->
+  <div id="view-tailor" class="suite-view hidden max-w-7xl mx-auto px-2 sm:px-4 pt-6 pb-20">
+<!-- WORKSPACE STATUS BANNER -->
+  <div class="bg-kraft border-b-2 border-ink px-4 py-1.5 flex flex-wrap items-center justify-between text-xs font-mono">
+    <div class="flex items-center gap-3">
+      <span class="font-bold text-ink flex items-center gap-1">
+        <span class="text-stampRed">●</span> ASYNC WORKER:
+      </span>
+      <span id="worker-status-badge" class="px-2 py-0.5 bg-newsprint border border-ink font-bold text-mintInk">
+        READY TO COMPILE
+      </span>
+    </div>
+    <div class="flex items-center gap-4 text-zinc-600">
+      <span>Idempotency Hash: <strong class="text-ink">sha256-d7a8e</strong></span>
+      <span>Truthfulness Guard: <strong class="text-mintInk">ACTIVE (100% Locked)</strong></span>
+    </div>
+  </div>
+
+  <!-- MAIN THREE-COLUMN WORKSPACE -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0">
+
+    <!-- ========================================= -->
+    <!-- COLUMN 1: JOB DESCRIPTION PANEL (Col: 3.5) -->
+    <!-- ========================================= -->
+    <section class="lg:col-span-4 bg-kraft border-b-4 lg:border-b-0 lg:border-r-4 border-ink p-4 flex flex-col custom-scroll overflow-y-auto max-h-[calc(100vh-85px)]">
+      <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 bg-stampRed rotate-45 border border-ink"></span>
+          <h2 class="font-display font-black text-base uppercase tracking-tight">01 // Job Specification</h2>
+        </div>
+        <span class="text-xs font-mono text-zinc-500">[Paste Target JD]</span>
+      </div>
+
+      <!-- Quick Role Presets -->
+      <div class="mb-3 space-y-1">
+        <label class="text-[11px] font-mono font-bold uppercase text-zinc-500">Fast Sample Presets:</label>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="loadJd('backend')" class="px-2 py-1 text-xs font-mono font-bold bg-newsprint border border-ink shadow-brutal-sm hover:bg-highlighter transition">
+            Backend (Node/Postgres)
+          </button>
+          <button onclick="loadJd('fullstack')" class="px-2 py-1 text-xs font-mono font-bold bg-newsprint border border-ink shadow-brutal-sm hover:bg-highlighter transition">
+            Full Stack (React/Next)
+          </button>
+        </div>
+      </div>
+
+      <!-- Textarea -->
+      <div class="flex-1 flex flex-col relative mb-4">
+        <textarea id="jd-input" oninput="updateJdMetrics()" class="w-full flex-1 min-h-[220px] bg-newsprint border-2 border-ink p-3 font-mono text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blueprint resize-none custom-scroll" placeholder="Paste the complete job description here..."></textarea>
+        
+        <div class="absolute bottom-2 right-2 bg-kraft border border-ink px-2 py-0.5 font-mono text-[10px] text-zinc-600 shadow-brutal-sm">
+          <span id="jd-char-count">840</span> chars | <span id="jd-token-count">~175</span> tokens
+        </div>
+      </div>
+
+      <!-- Extracted Keyword Tags (Real-time parser) -->
+      <div class="bg-newsprint border-2 border-ink p-3 mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-mono text-xs font-bold uppercase">Extracted Hard Requirements</span>
+          <span class="text-[10px] font-mono bg-kraft px-1 border border-ink" id="extracted-count">6 detected</span>
+        </div>
+        <div class="flex flex-wrap gap-1" id="keyword-tags">
+          <span class="px-2 py-0.5 bg-amber-100 border border-ink font-mono text-[11px] text-ink font-bold">Node.js</span>
+          <span class="px-2 py-0.5 bg-amber-100 border border-ink font-mono text-[11px] text-ink font-bold">PostgreSQL</span>
+          <span class="px-2 py-0.5 bg-amber-100 border border-ink font-mono text-[11px] text-ink font-bold">Redis</span>
+          <span class="px-2 py-0.5 bg-amber-100 border border-ink font-mono text-[11px] text-ink font-bold">WebSockets</span>
+          <span class="px-2 py-0.5 bg-red-100 border border-stampRed font-mono text-[11px] text-stampRed font-bold">Kafka (Missing)</span>
+          <span class="px-2 py-0.5 bg-amber-100 border border-ink font-mono text-[11px] text-ink font-bold">Docker</span>
+        </div>
+      </div>
+
+      <!-- Pre-Flight Token Surgery Box -->
+      <div class="bg-newsprint border-2 border-ink p-3 relative">
+        <div class="washi-tape absolute -top-2.5 right-4 px-2 py-0.5 text-[9px] font-mono font-bold uppercase border border-zinc-400">
+          Token Surgery Pre-flight
+        </div>
+        <div class="space-y-1 font-mono text-xs">
+          <div class="flex justify-between">
+            <span class="text-zinc-600">Est. Prompt Payload:</span>
+            <span class="font-bold">~840 tokens</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-zinc-600">Est. Diff Completion:</span>
+            <span class="font-bold">~280 tokens</span>
+          </div>
+          <div class="flex justify-between text-mintInk font-bold">
+            <span>Cache Discount:</span>
+            <span>-72% (System Header)</span>
+          </div>
+        </div>
+
+        <button id="btn-run-tailoring" onclick="runTailoring()" class="w-full mt-3 py-2.5 bg-ink text-newsprint font-display font-black text-sm uppercase tracking-wider border-2 border-ink shadow-brutal hover:bg-highlighter hover:text-ink transition flex items-center justify-center gap-2">
+          <span>⚡ Run Tailoring Surgery</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================= -->
+    <!-- COLUMN 2: DIFF REVIEW WORKSPACE (Col: 4.5) -->
+    <!-- ========================================= -->
+    <section class="lg:col-span-4 bg-newsprint border-b-4 lg:border-b-0 lg:border-r-4 border-ink p-4 flex flex-col custom-scroll overflow-y-auto max-h-[calc(100vh-85px)]">
+      
+      <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 bg-mintInk border border-ink"></span>
+          <h2 class="font-display font-black text-base uppercase tracking-tight">02 // Truth-Gated Diff Review</h2>
+        </div>
+        <span class="text-xs font-mono bg-kraft px-1.5 py-0.5 border border-ink" id="diff-status-pill">
+          3 Pending Diffs
+        </span>
+      </div>
+
+      <!-- Instructions strip -->
+      <div class="bg-kraft border border-ink p-2 mb-4 font-mono text-[11px] text-zinc-600 flex items-center justify-between">
+        <span>Click [Accept] to merge changes into the LaTeX draft.</span>
+        <button onclick="acceptAll()" class="text-blueprint font-bold underline uppercase">Accept All</button>
+      </div>
+
+      <!-- Diff Cards Container -->
+      <div class="space-y-4 flex-1" id="diff-list">
+
+        <!-- DIFF ITEM 1 -->
+        <div class="bg-kraft border-2 border-ink p-3 shadow-brutal-sm relative" id="diff-card-1">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-xs font-bold text-ink uppercase">Bullet #1: Sharma & Saraf Groups</span>
+            <span class="text-[10px] font-mono bg-mintInk/20 text-emerald-800 border border-mintInk px-1 font-bold">
+              High Relevance
+            </span>
+          </div>
+
+          <!-- Diff comparison box -->
+          <div class="space-y-2 bg-newsprint border border-ink p-2 text-xs font-sans">
+            <div class="text-zinc-500 line-through decoration-stampRed decoration-1 bg-red-50/50 p-1">
+              <strong class="font-mono text-stampRed font-bold text-[10px] uppercase">ORIGINAL:</strong>
+              "Worked on backend APIs using Node.js, Express, and PostgreSQL to fix bugs and manage server tasks."
+            </div>
+            <div class="text-ink font-medium bg-emerald-50/50 p-1 border-l-2 border-mintInk">
+              <strong class="font-mono text-mintInk font-bold text-[10px] uppercase">TAILORED DIFF:</strong>
+              "Engineered modular monolith RESTful APIs with <strong class="bg-yellow-200">Express & PostgreSQL</strong>, resolving connection pool collisions and hardening DevAuth middleware."
+            </div>
+          </div>
+
+          <!-- Provenance / Truth-Guard Anchor -->
+          <div class="mt-2 flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-1 border-t border-zinc-300">
+            <span>Source: <strong class="text-ink font-semibold">Vault #EXP-01</strong></span>
+            <span class="text-mintInk font-bold">✓ 100% Grounded</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="mt-3 flex gap-2">
+            <button onclick="acceptDiff(1)" class="flex-1 py-1 bg-ink text-newsprint font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-mintInk hover:text-ink transition">
+              ✓ Accept
+            </button>
+            <button onclick="rejectDiff(1)" class="px-3 py-1 bg-newsprint text-stampRed border border-ink font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-red-100 transition">
+              ✕ Reject
+            </button>
+          </div>
+        </div>
+
+        <!-- DIFF ITEM 2 -->
+        <div class="bg-kraft border-2 border-ink p-3 shadow-brutal-sm relative" id="diff-card-2">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-xs font-bold text-ink uppercase">Bullet #2: Project RefNet</span>
+            <span class="text-[10px] font-mono bg-blueprint/20 text-sky-800 border border-blueprint px-1 font-bold">
+              Architecture Match
+            </span>
+          </div>
+
+          <div class="space-y-2 bg-newsprint border border-ink p-2 text-xs font-sans">
+            <div class="text-zinc-500 line-through decoration-stampRed decoration-1 bg-red-50/50 p-1">
+              <strong class="font-mono text-stampRed font-bold text-[10px] uppercase">ORIGINAL:</strong>
+              "Built full-stack job referral web platform with Docker, Redis caching, and JWT auth."
+            </div>
+            <div class="text-ink font-medium bg-emerald-50/50 p-1 border-l-2 border-mintInk">
+              <strong class="font-mono text-mintInk font-bold text-[10px] uppercase">TAILORED DIFF:</strong>
+              "Architected job referral engine with <strong class="bg-yellow-200">Redis cache layers and Docker Compose</strong>, implementing JWT and Supabase connection pools."
+            </div>
+          </div>
+
+          <div class="mt-2 flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-1 border-t border-zinc-300">
+            <span>Source: <strong class="text-ink font-semibold">Vault #PRJ-01</strong></span>
+            <span class="text-mintInk font-bold">✓ 100% Grounded</span>
+          </div>
+
+          <div class="mt-3 flex gap-2">
+            <button onclick="acceptDiff(2)" class="flex-1 py-1 bg-ink text-newsprint font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-mintInk hover:text-ink transition">
+              ✓ Accept
+            </button>
+            <button onclick="rejectDiff(2)" class="px-3 py-1 bg-newsprint text-stampRed border border-ink font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-red-100 transition">
+              ✕ Reject
+            </button>
+          </div>
+        </div>
+
+        <!-- DIFF ITEM 3 -->
+        <div class="bg-kraft border-2 border-ink p-3 shadow-brutal-sm relative" id="diff-card-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-xs font-bold text-ink uppercase">Bullet #3: Project Naadan (Cloud Kitchen)</span>
+            <span class="text-[10px] font-mono bg-mintInk/20 text-emerald-800 border border-mintInk px-1 font-bold">
+              Realtime Systems
+            </span>
+          </div>
+
+          <div class="space-y-2 bg-newsprint border border-ink p-2 text-xs font-sans">
+            <div class="text-zinc-500 line-through decoration-stampRed decoration-1 bg-red-50/50 p-1">
+              <strong class="font-mono text-stampRed font-bold text-[10px] uppercase">ORIGINAL:</strong>
+              "Made a cloud kitchen web app with live orders, admin dashboards, and custom domain on Vercel."
+            </div>
+            <div class="text-ink font-medium bg-emerald-50/50 p-1 border-l-2 border-mintInk">
+              <strong class="font-mono text-mintInk font-bold text-[10px] uppercase">TAILORED DIFF:</strong>
+              "Deployed real-time production kitchen system with <strong class="bg-yellow-200">WebSockets (Socket.io)</strong> and PostgreSQL Prisma ORM, handling live order routing."
+            </div>
+          </div>
+
+          <div class="mt-2 flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-1 border-t border-zinc-300">
+            <span>Source: <strong class="text-ink font-semibold">Vault #PRJ-02</strong></span>
+            <span class="text-mintInk font-bold">✓ 100% Grounded</span>
+          </div>
+
+          <div class="mt-3 flex gap-2">
+            <button onclick="acceptDiff(3)" class="flex-1 py-1 bg-ink text-newsprint font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-mintInk hover:text-ink transition">
+              ✓ Accept
+            </button>
+            <button onclick="rejectDiff(3)" class="px-3 py-1 bg-newsprint text-stampRed border border-ink font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-red-100 transition">
+              ✕ Reject
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================= -->
+    <!-- COLUMN 3: LIVE PREVIEW & EXPORT (Col: 4.0) -->
+    <!-- ========================================= -->
+    <section class="lg:col-span-4 bg-kraft p-4 flex flex-col custom-scroll overflow-y-auto max-h-[calc(100vh-85px)]">
+      
+      <!-- Preview Header Tabs -->
+      <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+        <div class="flex items-center gap-1">
+          <button id="tab-btn-pdf" onclick="switchPreviewTab('pdf')" class="px-2.5 py-1 text-xs font-mono font-bold uppercase bg-ink text-newsprint shadow-brutal-sm">
+            ATS PDF View
+          </button>
+          <button id="tab-btn-tex" onclick="switchPreviewTab('tex')" class="px-2.5 py-1 text-xs font-mono font-bold uppercase bg-newsprint text-ink border border-ink hover:bg-zinc-200">
+            Raw LaTeX (.tex)
+          </button>
+        </div>
+        <span class="font-mono text-[10px] text-zinc-500">Tectonic Engine v0.15</span>
+      </div>
+
+      <!-- TAB 1: COMPILED ATS PDF PREVIEW -->
+      <div id="preview-tab-pdf" class="flex-1 flex flex-col">
+        <div class="bg-white border-2 border-ink p-5 shadow-brutal-lg min-h-[460px] text-[11px] leading-tight font-serif text-black relative">
+          
+          <!-- Stamp of approval -->
+          <div id="stamp-approved" class="hidden absolute top-4 right-4 rubber-stamp px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest rotate-[12deg]">
+            [DIFFS COMMITTED]
+          </div>
+
+          <!-- Document Header -->
+          <div class="text-center border-b border-black pb-2 mb-3">
+            <h1 class="font-sans font-bold text-base tracking-wide uppercase">Taha Hakim Khan</h1>
+            <p class="font-sans text-[10px] text-zinc-700 mt-0.5">
+              Nagpur, Maharashtra, India | mohd.tahakhan9@gmail.com | github.com/TahaKhanSDE | +91 9XXXXXXXXX
+            </p>
+          </div>
+
+          <!-- Section: Experience -->
+          <div class="mb-3">
+            <h2 class="font-sans font-bold text-xs uppercase border-b border-black pb-0.5 mb-1.5 tracking-wider">Experience</h2>
+            <div class="mb-2">
+              <div class="flex justify-between font-sans font-bold text-[11px]">
+                <span>Software Engineer & SDE Intern — Sharma & Saraf Groups LLP</span>
+                <span>06/2026 – Present</span>
+              </div>
+              <ul class="list-disc pl-4 mt-1 space-y-1 font-serif text-[10.5px]">
+                <li id="pdf-bullet-1">
+                  Engineered modular monolith RESTful APIs with Express & PostgreSQL, resolving connection pool collisions and hardening DevAuth middleware.
+                </li>
+                <li>Developed robust database migrations and configured local concurrency workflows.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Section: Projects -->
+          <div class="mb-3">
+            <h2 class="font-sans font-bold text-xs uppercase border-b border-black pb-0.5 mb-1.5 tracking-wider">Selected Projects</h2>
+            <div class="mb-2">
+              <div class="flex justify-between font-sans font-bold text-[11px]">
+                <span>RefNet — Job Referral Network System</span>
+                <span>Postgres, Redis, Docker</span>
+              </div>
+              <ul class="list-disc pl-4 mt-0.5 space-y-1 font-serif text-[10.5px]">
+                <li id="pdf-bullet-2">
+                  Architected job referral engine with Redis cache layers and Docker Compose, implementing JWT and Supabase connection pools.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-sans font-bold text-[11px]">
+                <span>Naadan Platform — Cloud Kitchen Platform</span>
+                <span>Next.js, WebSockets, Prisma</span>
+              </div>
+              <ul class="list-disc pl-4 mt-0.5 space-y-1 font-serif text-[10.5px]">
+                <li id="pdf-bullet-3">
+                  Deployed real-time production kitchen system with WebSockets (Socket.io) and PostgreSQL Prisma ORM, handling live order routing.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Section: Technical Skills -->
+          <div>
+            <h2 class="font-sans font-bold text-xs uppercase border-b border-black pb-0.5 mb-1.5 tracking-wider">Technical Skills</h2>
+            <p class="font-sans text-[10.5px]">
+              <strong>Languages & DB:</strong> TypeScript, C++, Python, PostgreSQL, Redis, MongoDB<br>
+              <strong>Frameworks & Tools:</strong> Next.js, Express, Tailwind, Docker, Git, BullMQ
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: RAW LATEX SCRIPT (.tex) -->
+      <div id="preview-tab-tex" class="hidden flex-1 flex flex-col">
+        <div class="relative flex-1">
+          <textarea id="tex-source-code" readonly class="w-full h-[460px] bg-zinc-900 text-zinc-100 p-3 font-mono text-[11px] leading-relaxed border-2 border-ink resize-none custom-scroll">
+\documentclass[letterpaper,10pt]{article}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\textwidth}{1.0in}
+\addtolength{\topmargin}{-0.5in}
+\addtolength{\textheight}{1.0in}
+
+\titleformat{\section}{\vspace{-4pt}\scshape\raggedright\large}{}{0em}{}[\titlerule \vspace{-5pt}]
+
+\begin{document}
+\begin{center}
+    \textbf{\Huge Taha Hakim Khan} \\ \vspace{2pt}
+    \small Nagpur, MH, India $|$ mohd.tahakhan9@gmail.com $|$ github.com/TahaKhanSDE
+\end{center}
+
+\section{Experience}
+\textbf{Software Engineer} -- Sharma \& Saraf Groups LLP \hfill 06/2026 -- Present \\
+\begin{itemize}
+    \item Engineered modular monolith RESTful APIs with Express \& PostgreSQL, resolving connection pool collisions and hardening DevAuth middleware.
+    \item Developed robust database migrations and configured local concurrency workflows.
+\end{itemize}
+
+\section{Projects}
+\textbf{RefNet} -- Postgres, Redis, Docker, Supabase \hfill 2026 \\
+\begin{itemize}
+    \item Architected job referral engine with Redis cache layers and Docker Compose, implementing JWT and Supabase connection pools.
+\end{itemize}
+
+\textbf{Naadan Platform} -- Next.js, WebSockets, Prisma \hfill 2026 \\
+\begin{itemize}
+    \item Deployed real-time production kitchen system with WebSockets (Socket.io) and PostgreSQL Prisma ORM, handling live order routing.
+\end{itemize}
+
+\end{document}</textarea>
+          <button onclick="copyTexCode()" class="absolute top-2 right-2 px-2.5 py-1 bg-highlighter text-ink font-mono text-xs font-bold uppercase shadow-brutal-sm hover:bg-yellow-400">
+            📋 Copy .tex
+          </button>
+        </div>
+      </div>
+
+      <!-- Dual Download Actions -->
+      <div class="mt-4 pt-3 border-t-2 border-ink space-y-2">
+        <div class="flex gap-2">
+          <button onclick="triggerDownload('pdf')" class="flex-1 py-2.5 bg-ink text-newsprint font-display font-black text-xs uppercase tracking-wider border-2 border-ink shadow-brutal hover:bg-blueprint hover:text-white transition flex items-center justify-center gap-1.5">
+            <span>⬇ Download ATS PDF</span>
+          </button>
+          <button onclick="triggerDownload('tex')" class="flex-1 py-2.5 bg-newsprint text-ink font-mono font-bold text-xs uppercase border-2 border-ink shadow-brutal hover:bg-highlighter transition flex items-center justify-center gap-1.5">
+            <span>⬇ Export .tex Script</span>
+          </button>
+        </div>
+        <p class="text-center font-mono text-[10px] text-zinc-500">
+          Ready for direct upload to Overleaf or local compilation with Tectonic.
+        </p>
+      </div>
+
+    </section>
+
+  </div>
+
+  
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 4: ATS DIAGNOSTIC & JOB-MATCH BREAKDOWN              -->
+  <!-- ========================================================= -->
+  <div id="view-diag" class="suite-view hidden">
+<!-- ========================================================= -->
+  <!-- MAIN DIAGNOSTIC WORKSPACE                                 -->
+  <!-- ========================================================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 pt-8">
+    
+    <!-- Header Title with Editorial Tape Banner -->
+    <div class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-carbon pb-6 mb-8">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="stamp text-mint text-xs bg-mint/10 font-bold">[ADR-0006 AUDITED]</span>
+          <span class="font-mono text-xs text-carbon/60 uppercase">Hybrid Evaluation Engine</span>
+        </div>
+        <h1 class="font-display font-black text-3xl sm:text-5xl uppercase tracking-tight text-carbon">
+          ATS READINESS & MATCH AUDIT
+        </h1>
+        <p class="font-body text-sm text-carbon/80 mt-1 max-w-2xl">
+          Deterministic ATS compliance verified against standard single-column LaTeX parser rules, paired with multi-factor vector semantic job matching.
+        </p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button onclick="openFormulaModal(); playStampSound()" class="font-mono text-xs font-bold px-4 py-2 bg-kraft border-2 border-carbon shadow-brutal hover:bg-white flex items-center gap-1.5">
+          <span>📐 View Math Formula</span>
+        </button>
+        <button onclick="recalculateDiagnostic(); playStampSound()" class="font-mono text-xs font-bold px-4 py-2 bg-carbon text-white shadow-brutal hover:bg-ochre hover:text-carbon transition flex items-center gap-2">
+          <span>↺ Re-Run Diagnostics</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- DUAL HERO GAUGES (DETERMINISTIC ATS vs SEMANTIC MATCH)     -->
+    <!-- ========================================================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+      
+      <!-- GAUGE A: ATS FORMAT & PARSEABILITY (100% DETERMINISTIC) -->
+      <div class="bg-white border-2 border-carbon shadow-brutal-lg p-6 rounded-sm relative">
+        <div class="pushpin -top-2 left-6"></div>
+        <div class="flex items-start justify-between border-b border-carbon/20 pb-3 mb-4">
+          <div>
+            <span class="font-mono text-[11px] font-bold uppercase text-carbon/60">Metric 01 // Structural Layer</span>
+            <h2 class="font-display font-black text-2xl text-carbon">ATS FORMAT READINESS</h2>
+          </div>
+          <span class="stamp text-mint text-xs rotate-[-2deg] bg-mint/10 font-bold">[100% PARSEABLE]</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <!-- Radial Score Dial -->
+          <div class="relative w-36 h-36 flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" stroke="#EFECE6" stroke-width="12" fill="none" />
+              <circle cx="60" cy="60" r="50" stroke="#10B981" stroke-width="12" stroke-dasharray="314.15" stroke-dashoffset="6.28" stroke-linecap="square" fill="none" class="transition-all duration-700" />
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center font-mono">
+              <span class="text-3xl font-black text-carbon">98<span class="text-sm font-normal text-carbon/60">/100</span></span>
+              <span class="text-[10px] font-bold uppercase text-mint tracking-wider">Top Tier</span>
+            </div>
+          </div>
+
+          <!-- Deterministic Checklist Checklist -->
+          <div class="space-y-2 text-xs font-mono w-full">
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span class="flex items-center gap-1.5">
+                <span class="text-mint font-bold">✓</span>
+                <span>Single-Column Strict Linear Order</span>
+              </span>
+              <span class="font-bold text-mint">PASS</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span class="flex items-center gap-1.5">
+                <span class="text-mint font-bold">✓</span>
+                <span>LaTeX Text-Layer (No Raster Images)</span>
+              </span>
+              <span class="font-bold text-mint">PASS</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span class="flex items-center gap-1.5">
+                <span class="text-mint font-bold">✓</span>
+                <span>Standard Section Headings (Experience, Skills)</span>
+              </span>
+              <span class="font-bold text-mint">PASS</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span class="flex items-center gap-1.5">
+                <span class="text-ochre font-bold">!</span>
+                <span>1-Page Strict Budget (18 / 20 Lines)</span>
+              </span>
+              <span class="font-bold text-ochre">90% CAP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-carbon/20 flex items-center justify-between font-mono text-[11px] text-carbon/70">
+          <span>Engine: Local Tectonic AST Parser</span>
+          <span class="font-bold text-carbon">No Parser Ambiguity</span>
+        </div>
+      </div>
+
+      <!-- GAUGE B: JOB-MATCH & SEMANTIC RELEVANCE (HYBRID VECTOR/RUBRIC) -->
+      <div class="bg-white border-2 border-carbon shadow-brutal-lg p-6 rounded-sm relative">
+        <div class="pushpin -top-2 right-6"></div>
+        <div class="flex items-start justify-between border-b border-carbon/20 pb-3 mb-4">
+          <div>
+            <span class="font-mono text-[11px] font-bold uppercase text-carbon/60">Metric 02 // Semantic Layer</span>
+            <h2 class="font-display font-black text-2xl text-carbon">JOB SPEC MATCH SCORE</h2>
+          </div>
+          <span class="stamp text-cyanprint text-xs rotate-[2deg] bg-cyanprint/10 font-bold">[HIGH RELEVANCE]</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <!-- Radial Score Dial -->
+          <div class="relative w-36 h-36 flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" stroke="#EFECE6" stroke-width="12" fill="none" />
+              <circle cx="60" cy="60" r="50" stroke="#0284C7" stroke-width="12" stroke-dasharray="314.15" stroke-dashoffset="43.98" stroke-linecap="square" fill="none" class="transition-all duration-700" />
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center font-mono">
+              <span class="text-3xl font-black text-carbon">86<span class="text-sm font-normal text-carbon/60">/100</span></span>
+              <span class="text-[10px] font-bold uppercase text-cyanprint tracking-wider">Strong Fit</span>
+            </div>
+          </div>
+
+          <!-- Hybrid Weights Breakdown -->
+          <div class="space-y-2 text-xs font-mono w-full">
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span>Keyword & Skill Coverage</span>
+              <span class="font-bold text-carbon">91% (11/12 Match)</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span>Cosine Semantic Distance (pgvector)</span>
+              <span class="font-bold text-carbon">0.89 Sim</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span>Seniority & Scope Rubric (SDE-2)</span>
+              <span class="font-bold text-carbon">84/100</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-newsprint border border-carbon/20 rounded">
+              <span>Quantified Metrics Density</span>
+              <span class="font-bold text-mint">88% (7/8 Bullets)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-carbon/20 flex items-center justify-between font-mono text-[11px] text-carbon/70">
+          <span>Model: Gemini 2.0 Flash (Rubric) + all-MiniLM</span>
+          <span class="text-cyanprint font-bold">1 Gap Detected</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- DETAILED AUDIT LEDGER (SWISS TABULAR GRID)                -->
+    <!-- ========================================================= -->
+    <div class="bg-white border-2 border-carbon shadow-brutal-lg rounded-sm mb-12">
+      <div class="p-5 border-b-2 border-carbon bg-kraft flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="font-mono text-xs font-bold uppercase text-carbon/60">Detailed Diagnostic</span>
+          <h3 class="font-display font-black text-xl uppercase text-carbon">AUDIT LEDGER & KEYWORD AUDIT</h3>
+        </div>
+
+        <!-- Filter Pill Chips -->
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <button onclick="filterAudit('all'); playClickSound()" id="filter-all" class="px-3 py-1 bg-carbon text-white font-bold rounded shadow-brutal-sm">
+            All Checks (6)
+          </button>
+          <button onclick="filterAudit('vault'); playClickSound()" id="filter-vault" class="px-3 py-1 bg-white border border-carbon text-carbon font-bold rounded shadow-brutal-sm hover:bg-newsprint">
+            ⭐ Vault Opportunities (2)
+          </button>
+          <button onclick="filterAudit('critical'); playClickSound()" id="filter-critical" class="px-3 py-1 bg-white border border-carbon text-carbon font-bold rounded shadow-brutal-sm hover:bg-newsprint">
+            ⚠️ Missing Gaps (1)
+          </button>
+        </div>
+      </div>
+
+      <!-- Ledger Table -->
+      <div class="overflow-x-auto font-mono text-xs">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b-2 border-carbon bg-newsprint text-carbon/80 text-[11px] uppercase">
+              <th class="py-3 px-4">Evaluation Criterion</th>
+              <th class="py-3 px-4">Target Requirement (JD)</th>
+              <th class="py-3 px-4">Candidate Grounding</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-carbon/20">
+            
+            <!-- Row 1: Hard Skill Match (Redis) -->
+            <tr class="audit-row row-verified hover:bg-newsprint/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-carbon">Async Queues & Redis</td>
+              <td class="py-3 px-4 text-carbon/70">BullMQ, Task queues, retry backoff</td>
+              <td class="py-3 px-4 text-carbon">Verified: Handled 12k req/sec in Rust Core (exp_01)</td>
+              <td class="py-3 px-4">
+                <span class="stamp text-mint text-[10px] bg-mint/10">[100% MATCH]</span>
+              </td>
+              <td class="py-3 px-4 text-right text-mint font-bold">Grounded</td>
+            </tr>
+
+            <!-- Row 2: Hard Skill Match (Docker & Containerization) -->
+            <tr class="audit-row row-vault hover:bg-newsprint/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-carbon">Container Orchestration</td>
+              <td class="py-3 px-4 text-carbon/70">Docker Compose & Multi-stage builds</td>
+              <td class="py-3 px-4 text-ochre font-semibold">Found in Master Vault (RefNet Project) — Omitted on draft</td>
+              <td class="py-3 px-4">
+                <span class="stamp text-ochre text-[10px] bg-ochre/10">[IN VAULT]</span>
+              </td>
+              <td class="py-3 px-4 text-right">
+                <button onclick="insertVaultSkill('Docker'); playStampSound()" id="btn-insert-docker" class="px-2.5 py-1 bg-ochre text-carbon font-bold rounded border border-carbon shadow-brutal-sm hover:bg-white transition">
+                  + Add to Draft
+                </button>
+              </td>
+            </tr>
+
+            <!-- Row 3: Missing Gap (Apache Kafka) -->
+            <tr class="audit-row row-critical hover:bg-newsprint/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-carbon">Distributed Streaming</td>
+              <td class="py-3 px-4 text-carbon/70">Apache Kafka cluster maintenance</td>
+              <td class="py-3 px-4 text-crimson">No record in Master Vault or Experience History</td>
+              <td class="py-3 px-4">
+                <span class="stamp text-crimson text-[10px] bg-crimson/10">[UNVERIFIED GAP]</span>
+              </td>
+              <td class="py-3 px-4 text-right">
+                <button onclick="viewGapAdvice('kafka'); playClickSound()" class="px-2.5 py-1 bg-kraft border border-carbon text-carbon font-bold rounded hover:bg-white shadow-brutal-sm">
+                  View Advice
+                </button>
+              </td>
+            </tr>
+
+            <!-- Row 4: Quantified Metrics Ratio -->
+            <tr class="audit-row row-verified hover:bg-newsprint/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-carbon">Quantified Metrics Density</td>
+              <td class="py-3 px-4 text-carbon/70">&gt;75% bullets with quantified impact</td>
+              <td class="py-3 px-4 text-carbon">87.5% (7 of 8 bullets contain concrete metrics)</td>
+              <td class="py-3 px-4">
+                <span class="stamp text-mint text-[10px] bg-mint/10">[HIGH DENSITY]</span>
+              </td>
+              <td class="py-3 px-4 text-right text-mint font-bold">Verified</td>
+            </tr>
+
+            <!-- Row 5: PostgreSQL Database Indexing -->
+            <tr class="audit-row row-vault hover:bg-newsprint/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-carbon">PostgreSQL Query Tuning</td>
+              <td class="py-3 px-4 text-carbon/70">EXPLAIN ANALYZE, Partitioning, UUIDv7</td>
+              <td class="py-3 px-4 text-ochre font-semibold">Found in Master Vault (exp_02 notes) — Absent on draft</td>
+              <td class="py-3 px-4">
+                <span class="stamp text-ochre text-[10px] bg-ochre/10">[IN VAULT]</span>
+              </td>
+              <td class="py-3 px-4 text-right">
+                <button onclick="insertVaultSkill('Postgres'); playStampSound()" id="btn-insert-postgres" class="px-2.5 py-1 bg-ochre text-carbon font-bold rounded border border-carbon shadow-brutal-sm hover:bg-white transition">
+                  + Add to Draft
+                </button>
+              </td>
+            </tr>
+
+            <!-- Row 6: Notice Period & Location Filter -->
+            <tr class="audit-row row-verified hover:bg-newsprint/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-carbon">Recruiter Filter (India)</td>
+              <td class="py-3 px-4 text-carbon/70">Immediate to 30 Days Notice, Bengaluru</td>
+              <td class="py-3 px-4 text-carbon">Matched: Immediate Notice Period, Bengaluru resident</td>
+              <td class="py-3 px-4">
+                <span class="stamp text-mint text-[10px] bg-mint/10">[TIER-1 PASS]</span>
+              </td>
+              <td class="py-3 px-4 text-right text-mint font-bold">Qualified</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- THE TRUTHFULNESS GUARD: HONEST GAP ANALYSIS CARDS         -->
+    <!-- ========================================================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      
+      <!-- Card 1: Master Vault Opportunities (One-Click Enriches) -->
+      <div class="bg-kraft border-2 border-carbon shadow-brutal p-6 relative rounded-sm">
+        <div class="washi-tape absolute -top-3 left-6 px-4 py-0.5 font-mono text-[10px] font-bold text-carbon uppercase border border-carbon/20">
+          ⭐ Found in Master Vault
+        </div>
+
+        <div class="flex items-center justify-between border-b border-carbon/20 pb-3 mb-4 mt-1">
+          <h4 class="font-display font-black text-xl text-carbon">VAULT RECOVERY OPPORTUNITY</h4>
+          <span class="font-mono text-xs text-mint font-bold">+6% Match Potential</span>
+        </div>
+
+        <p class="font-body text-xs text-carbon/80 leading-relaxed mb-4">
+          You already proved experience with <strong class="text-carbon">Docker Containerization</strong> in your Master Vault Project (<em>RefNet P2P Protocol</em>), but omitted it from the active 1-page draft.
+        </p>
+
+        <div class="bg-white border border-carbon p-3.5 rounded font-mono text-xs space-y-2 mb-4">
+          <div class="text-[11px] text-carbon/60 font-bold uppercase">Proposed Bullet Insertion:</div>
+          <p class="text-carbon font-semibold">
+            "• Engineered multi-stage Docker builds and docker-compose deployment topologies, reducing image artifact footprint by 45%."
+          </p>
+          <span class="text-[10px] text-carbon/50 block">Ref: vault_project_refnet_03</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="font-hand text-lg font-bold text-mint">Zero hallucination. Verified fact.</span>
+          <button onclick="insertVaultSkill('Docker'); playStampSound()" class="px-4 py-2 bg-carbon text-white font-mono text-xs font-bold uppercase rounded shadow-brutal-sm hover:bg-ochre hover:text-carbon transition">
+            Apply to 1-Page Draft →
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2: Documented Gap (No Fabrication Allowed) -->
+      <div class="bg-[#FFF8F8] border-2 border-crimson shadow-brutal p-6 relative rounded-sm">
+        <div class="absolute -top-3 right-6">
+          <span class="stamp text-crimson text-xs bg-white font-bold rotate-2 shadow-sm">[ADR-0005 ENFORCED]</span>
+        </div>
+
+        <div class="border-b border-crimson/20 pb-3 mb-4 mt-1">
+          <span class="font-mono text-[11px] text-crimson font-bold uppercase">Honest Strategy</span>
+          <h4 class="font-display font-black text-xl text-carbon">UNGROUNDED SKILL: APACHE KAFKA</h4>
+        </div>
+
+        <p class="font-body text-xs text-carbon/80 leading-relaxed mb-4">
+          The recruiter job description requests <strong class="text-crimson">Apache Kafka clustering</strong>. TRUTH//PRINT will <em>never</em> invent a fake Kafka bullet point. Fabricating technologies you cannot defend in a system design interview leads to immediate blacklisting.
+        </p>
+
+        <div class="bg-white border border-crimson/40 p-3.5 rounded font-mono text-xs space-y-2 mb-4">
+          <div class="text-[11px] text-crimson font-bold uppercase">Recommended Interview Pivot:</div>
+          <p class="text-carbon leading-snug">
+            Emphasize your deep expertise with <strong class="text-carbon">Redis BullMQ task queues</strong> and distributed transaction idempotency. Frame Kafka as an architectural sibling: <em>"While my production background is BullMQ/Redis pipelines, the queuing semantics and partition concepts directly translate."</em>
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="font-hand text-base text-crimson font-bold">Honesty retains credibility.</span>
+          <span class="font-mono text-xs text-carbon/60">Gaps logged in Diagnostic</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 5: BYOK SECRET VAULT & TOKEN SURGERY                 -->
+  <!-- ========================================================= -->
+  <div id="view-keys" class="suite-view hidden">
+<main class="max-w-6xl w-full mx-auto px-4 pt-8 flex-1">
+    
+    <!-- Title & Context Strip -->
+    <div class="flex flex-wrap items-end justify-between gap-4 pb-6 border-b-2 border-ink">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="washi-tape px-3 py-0.5 text-xs font-mono font-bold uppercase text-ink rotate-[-1deg]">
+            Zero Server Markup Policy
+          </span>
+        </div>
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-ink tracking-tight uppercase mt-1">
+          BYOK Secret Vault & Token Surgery
+        </h1>
+        <p class="font-sans text-xs sm:text-sm text-zinc-600 max-w-2xl mt-1">
+          Your credentials never touch our database or disk. Keys are stored inside your device's native OS Keychain (Desktop) or ephemeral session storage (Web). All savings from prompt minification and JSON diffs go directly to your pocket.
+        </p>
+      </div>
+
+      <!-- Quick Summary Stat Cards -->
+      <div class="flex gap-2">
+        <div class="bg-kraft border-2 border-ink p-2.5 shadow-brutal-sm font-mono text-xs text-center min-w-[110px]">
+          <span class="text-[10px] text-zinc-500 uppercase block">Total Burn</span>
+          <span class="font-bold text-ink text-sm" id="stat-total-tokens">4,280 tok</span>
+        </div>
+        <div class="bg-kraft border-2 border-ink p-2.5 shadow-brutal-sm font-mono text-xs text-center min-w-[110px]">
+          <span class="text-[10px] text-zinc-500 uppercase block">Est. Cost</span>
+          <span class="font-bold text-mintInk text-sm" id="stat-total-cost">&lt; $0.001</span>
+        </div>
+        <div class="bg-kraft border-2 border-ink p-2.5 shadow-brutal-sm font-mono text-xs text-center min-w-[110px]">
+          <span class="text-[10px] text-zinc-500 uppercase block">Tokens Saved</span>
+          <span class="font-bold text-highlighter text-sm">~64.2%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID: VAULT CONFIG (LEFT) vs OPTIMIZATION & LEDGER (RIGHT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-8">
+
+      <!-- ============================================= -->
+      <!-- COLUMN 1: PROVIDER VAULT & KEY ENTRY (Col: 7) -->
+      <!-- ============================================= -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <div class="bg-kraft border-4 border-ink p-5 shadow-brutal-lg relative">
+          <!-- Washi tape label -->
+          <div class="washi-tape absolute -top-3 left-6 px-3 py-0.5 text-xs font-mono font-bold uppercase border border-zinc-400">
+            Hardware / Client Vault
+          </div>
+
+          <div class="flex items-center justify-between border-b-2 border-ink pb-3 mb-4">
+            <h2 class="font-display font-black text-lg uppercase tracking-tight">Active Provider Selection</h2>
+            <span class="font-mono text-xs text-zinc-500">Pick default tailoring engine</span>
+          </div>
+
+          <!-- Provider Tabs Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-5">
+            <button onclick="selectProvider('gemini')" id="tab-gemini" class="p-2.5 bg-ink text-newsprint border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm transition">
+              <div class="flex items-center justify-between mb-1">
+                <span>Google AI</span>
+                <span class="text-[10px] bg-mintInk text-ink px-1 font-bold">Free Tier</span>
+              </div>
+              <div class="text-[11px] text-zinc-300">Gemini 2.0 Flash</div>
+            </button>
+
+            <button onclick="selectProvider('groq')" id="tab-groq" class="p-2.5 bg-newsprint text-ink border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm hover:bg-zinc-200 transition">
+              <div class="flex items-center justify-between mb-1">
+                <span>Groq</span>
+                <span class="text-[10px] bg-highlighter text-ink px-1 font-bold">Ultra Fast</span>
+              </div>
+              <div class="text-[11px] text-zinc-600">Llama 3.3 70B</div>
+            </button>
+
+            <button onclick="selectProvider('openai')" id="tab-openai" class="p-2.5 bg-newsprint text-ink border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm hover:bg-zinc-200 transition">
+              <div class="flex items-center justify-between mb-1">
+                <span>OpenAI</span>
+                <span class="text-[10px] text-zinc-400">Standard</span>
+              </div>
+              <div class="text-[11px] text-zinc-600">gpt-4o-mini</div>
+            </button>
+
+            <button onclick="selectProvider('anthropic')" id="tab-anthropic" class="p-2.5 bg-newsprint text-ink border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm hover:bg-zinc-200 transition">
+              <div class="flex items-center justify-between mb-1">
+                <span>Anthropic</span>
+                <span class="text-[10px] text-zinc-400">High Eval</span>
+              </div>
+              <div class="text-[11px] text-zinc-600">Claude 3.5 Sonnet</div>
+            </button>
+
+            <button onclick="selectProvider('ollama')" id="tab-ollama" class="p-2.5 bg-newsprint text-ink border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm hover:bg-zinc-200 transition">
+              <div class="flex items-center justify-between mb-1">
+                <span>Local Ollama</span>
+                <span class="text-[10px] bg-blueprint text-white px-1 font-bold">Offline</span>
+              </div>
+              <div class="text-[11px] text-zinc-600">DeepSeek-R1 / Qwen</div>
+            </button>
+          </div>
+
+          <!-- Key Input Form -->
+          <div class="space-y-4 bg-newsprint border-2 border-ink p-4">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="font-mono text-xs font-bold uppercase text-ink" id="key-label">
+                  Google AI Studio API Key (Gemini)
+                </label>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="font-mono text-[11px] text-blueprint underline hover:text-ink">
+                  Get Free Key ↗
+                </a>
+              </div>
+              <div class="flex gap-2">
+                <input type="password" id="api-key-input" value="AIzaSyB8x0ExampleValidKeySecuredLocally" class="flex-1 bg-white border-2 border-ink px-3 py-2 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-blueprint" placeholder="Enter key starting with AIza...">
+                <button onclick="toggleKeyMask()" class="px-2.5 bg-kraft border-2 border-ink font-mono text-xs font-bold">
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <!-- Custom Base URL (Visible for Ollama or custom gateways) -->
+            <div id="base-url-container" class="hidden">
+              <label class="font-mono text-xs font-bold uppercase text-ink block mb-1">
+                Endpoint Base URL
+              </label>
+              <input type="text" id="base-url-input" value="http://localhost:11434/v1" class="w-full bg-white border-2 border-ink px-3 py-2 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-blueprint">
+              <span class="font-mono text-[10px] text-zinc-500 mt-0.5 block">Default local port for Ollama CLI runtime.</span>
+            </div>
+
+            <!-- Action: Test Connection -->
+            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-300">
+              <button onclick="testKeyConnection()" id="btn-test-key" class="px-4 py-2 bg-ink text-newsprint font-display font-black text-xs uppercase tracking-wider border-2 border-ink shadow-brutal-sm hover:bg-highlighter hover:text-ink transition flex items-center gap-1.5">
+                <span>🔌 Test Key Connection</span>
+              </button>
+
+              <div class="font-mono text-xs flex items-center gap-2" id="key-ping-status">
+                <span class="w-2 h-2 rounded-full bg-mintInk"></span>
+                <span class="text-zinc-700">HTTP 200 OK — Ready</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trust & Storage Notice -->
+          <div class="mt-4 p-3 bg-white border-2 border-dashed border-ink flex items-start gap-2.5">
+            <span class="font-mono text-lg text-stampRed font-bold">🛡</span>
+            <div class="text-[11px] font-mono text-zinc-600 leading-relaxed">
+              <strong class="text-ink uppercase font-bold">Zero-Cloud Encryption Contract:</strong> In the desktop build, this credential binds to <span class="bg-kraft px-1 border border-ink">Windows Credential Manager / macOS Keychain</span> via native Rust bindings. In the browser, it is encrypted in <span class="bg-kraft px-1 border border-ink">sessionStorage</span> and passed directly to worker memory with an immediate purge.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================= -->
+      <!-- COLUMN 2: OPTIMIZATION & USAGE LEDGER (Col: 5) -->
+      <!-- ============================================= -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- TOKEN SURGERY SKILLS ACCORDION -->
+        <div class="bg-kraft border-4 border-ink p-5 shadow-brutal-lg">
+          <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+            <h2 class="font-display font-black text-base uppercase tracking-tight">Token Surgery Skills</h2>
+            <span class="font-mono text-xs bg-highlighter text-ink px-1.5 py-0.5 font-bold border border-ink">
+              ACTIVE
+            </span>
+          </div>
+          <p class="font-sans text-xs text-zinc-600 mb-3">
+            Built-in pipeline techniques running before the prompt hits your provider:
+          </p>
+
+          <div class="space-y-2.5 font-mono text-xs">
+            <!-- Toggle 1 -->
+            <label class="flex items-start gap-2.5 p-2 bg-newsprint border border-ink cursor-pointer hover:bg-white transition">
+              <input type="checkbox" checked onchange="playAudio('click')" class="mt-0.5 w-4 h-4 accent-ink">
+              <div>
+                <span class="font-bold text-ink block">Diff-Only JSON Patches</span>
+                <span class="text-[11px] text-zinc-500">Prompts output only changed bullets rather than the whole resume. (~50% output savings)</span>
+              </div>
+            </label>
+
+            <!-- Toggle 2 -->
+            <label class="flex items-start gap-2.5 p-2 bg-newsprint border border-ink cursor-pointer hover:bg-white transition">
+              <input type="checkbox" checked onchange="playAudio('click')" class="mt-0.5 w-4 h-4 accent-ink">
+              <div>
+                <span class="font-bold text-ink block">Aggressive Schema Pruner</span>
+                <span class="text-[11px] text-zinc-500">Strips empty JSON keys, null fields, and unused sections before transit.</span>
+              </div>
+            </label>
+
+            <!-- Toggle 3 -->
+            <label class="flex items-start gap-2.5 p-2 bg-newsprint border border-ink cursor-pointer hover:bg-white transition">
+              <input type="checkbox" checked onchange="playAudio('click')" class="mt-0.5 w-4 h-4 accent-ink">
+              <div>
+                <span class="font-bold text-ink block">Prompt Cache Header Alignment</span>
+                <span class="text-[11px] text-zinc-500">Positions static ATS instructions at the head to trigger Anthropic/Gemini caching.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- SESSION USAGE LEDGER -->
+        <div class="bg-newsprint border-4 border-ink p-4 shadow-brutal-lg">
+          <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+            <h3 class="font-display font-black text-sm uppercase tracking-tight">Session Usage Ledger</h3>
+            <span class="font-mono text-[10px] text-zinc-500">In-Memory Audit</span>
+          </div>
+
+          <!-- Mini Table -->
+          <div class="border border-ink overflow-hidden text-[11px] font-mono">
+            <div class="bg-kraft p-1.5 flex justify-between font-bold border-b border-ink">
+              <span>Operation</span>
+              <span>Tokens (In/Out)</span>
+              <span>Est. Cost</span>
+            </div>
+            <div class="divide-y divide-zinc-300 max-h-[140px] overflow-y-auto custom-scroll" id="ledger-body">
+              <div class="p-1.5 flex justify-between bg-white">
+                <span class="truncate max-w-[140px]">#TR-9284 Tailoring</span>
+                <span>840 / 280</span>
+                <span class="text-mintInk font-bold">&lt; $0.0001</span>
+              </div>
+              <div class="p-1.5 flex justify-between bg-newsprint">
+                <span class="truncate max-w-[140px]">ATS Match Diagnostic</span>
+                <span>1,420 / 180</span>
+                <span class="text-mintInk font-bold">&lt; $0.0002</span>
+              </div>
+              <div class="p-1.5 flex justify-between bg-white">
+                <span class="truncate max-w-[140px]">RAG Vector Embed</span>
+                <span>1,200 / 0</span>
+                <span class="text-mintInk font-bold">&lt; $0.0001</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-zinc-300 flex justify-between items-center text-xs font-mono">
+            <span class="text-zinc-600">Free Tier Limit:</span>
+            <span class="font-bold text-blueprint">15 RPM / 1M TPM (Safe)</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 6: RESUME VERSION TREE & DAG                         -->
+  <!-- ========================================================= -->
+  <div id="view-versions" class="suite-view hidden">
+<main class="max-w-6xl w-full mx-auto px-4 pt-8 flex-1">
+    
+    <!-- Title & Context Strip -->
+    <div class="flex flex-wrap items-end justify-between gap-4 pb-6 border-b-2 border-ink">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="washi-tape px-3 py-0.5 text-xs font-mono font-bold uppercase text-ink rotate-[-1deg]">
+            ADR-0005 // Zero Overwrite Guarantee
+          </span>
+        </div>
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-ink tracking-tight uppercase mt-1">
+          Resume Version Tree & Snapshots
+        </h1>
+        <p class="font-sans text-xs sm:text-sm text-zinc-600 max-w-2xl mt-1">
+          Every edit, AI tailoring run, and JD adaptation creates an immutable cryptographic snapshot. Nothing is ever overwritten. Roll back, compare diffs, or branch variations at any point.
+        </p>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="flex gap-2 font-mono text-xs">
+        <div class="bg-kraft border-2 border-ink p-2 text-center min-w-[90px] shadow-brutal-sm">
+          <span class="text-[10px] text-zinc-500 uppercase block">Snapshots</span>
+          <strong class="text-ink text-sm">4 Saved</strong>
+        </div>
+        <div class="bg-kraft border-2 border-ink p-2 text-center min-w-[90px] shadow-brutal-sm">
+          <span class="text-[10px] text-zinc-500 uppercase block">Branches</span>
+          <strong class="text-blueprint text-sm">2 Derived</strong>
+        </div>
+        <div class="bg-kraft border-2 border-ink p-2 text-center min-w-[90px] shadow-brutal-sm">
+          <span class="text-[10px] text-zinc-500 uppercase block">Integrity</span>
+          <strong class="text-mintInk text-sm">100% Valid</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN VIEW: TREE (LEFT) vs SNAPSHOT INSPECTOR & DIFF (RIGHT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-8">
+
+      <!-- ============================================== -->
+      <!-- COLUMN 1: VISUAL COMMIT TREE / DAG (Col: 5)   -->
+      <!-- ============================================== -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="bg-kraft border-4 border-ink p-4 shadow-brutal-lg">
+          <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-4">
+            <h2 class="font-display font-black text-base uppercase tracking-tight">Timeline & Branch DAG</h2>
+            <span class="font-mono text-xs text-zinc-500">[Click to Inspect]</span>
+          </div>
+
+          <!-- The Commit / Snapshot Nodes -->
+          <div class="space-y-4 relative pl-6 before:content-[''] before:absolute before:left-2 before:top-3 before:bottom-3 before:w-0.5 before:bg-ink">
+
+            <!-- Node 4 (Active Head) -->
+            <div onclick="selectNode('v1.2')" id="node-v1-2" class="cursor-pointer bg-white border-2 border-ink p-3 shadow-brutal-sm relative transition hover:border-blueprint">
+              <span class="absolute -left-[27px] top-4 w-3.5 h-3.5 rounded-full bg-mintInk border-2 border-ink ring-2 ring-white"></span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-mono text-xs font-bold text-blueprint uppercase">v1.2 // HEAD (Current)</span>
+                <span class="text-[10px] font-mono bg-mintInk/20 text-emerald-800 px-1 border border-mintInk font-bold">Active</span>
+              </div>
+              <h3 class="font-display font-black text-sm uppercase">Tailored: FinGrowth (Full Stack)</h3>
+              <p class="font-mono text-[11px] text-zinc-500 mt-0.5">sha:9284f • Gemini 2.0 Flash • 10m ago</p>
+            </div>
+
+            <!-- Node 3 -->
+            <div onclick="selectNode('v1.1')" id="node-v1-1" class="cursor-pointer bg-newsprint border-2 border-ink p-3 shadow-brutal-sm relative transition hover:border-blueprint">
+              <span class="absolute -left-[27px] top-4 w-3.5 h-3.5 rounded-full bg-highlighter border-2 border-ink ring-2 ring-white"></span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-mono text-xs font-bold text-zinc-600 uppercase">v1.1 // Branch: CloudScale</span>
+                <span class="text-[10px] font-mono bg-zinc-200 px-1 border border-zinc-400">Archived</span>
+              </div>
+              <h3 class="font-display font-black text-sm uppercase">Tailored: Backend Engineer (SDE-1)</h3>
+              <p class="font-mono text-[11px] text-zinc-500 mt-0.5">sha:4f81c • Groq Llama 3.3 • 2h ago</p>
+            </div>
+
+            <!-- Node 2 -->
+            <div onclick="selectNode('v1.0.1')" id="node-v1-0-1" class="cursor-pointer bg-newsprint border-2 border-ink p-3 shadow-brutal-sm relative transition hover:border-blueprint">
+              <span class="absolute -left-[27px] top-4 w-3.5 h-3.5 rounded-full bg-ink border-2 border-ink ring-2 ring-white"></span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-mono text-xs font-bold text-zinc-600 uppercase">v1.0.1 // Polish</span>
+                <span class="text-[10px] font-mono bg-zinc-200 px-1 border border-zinc-400">Direct Edit</span>
+              </div>
+              <h3 class="font-display font-black text-sm uppercase">Quantified Metrics Expansion</h3>
+              <p class="font-mono text-[11px] text-zinc-500 mt-0.5">sha:1c73a • Manual Sync • Yesterday</p>
+            </div>
+
+            <!-- Node 1 (Root) -->
+            <div onclick="selectNode('v1.0')" id="node-v1-0" class="cursor-pointer bg-newsprint border-2 border-ink p-3 shadow-brutal-sm relative transition hover:border-blueprint">
+              <span class="absolute -left-[27px] top-4 w-3.5 h-3.5 rounded-full bg-zinc-400 border-2 border-ink ring-2 ring-white"></span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-mono text-xs font-bold text-zinc-600 uppercase">v1.0 // Root Base</span>
+                <span class="text-[10px] font-mono bg-zinc-200 px-1 border border-zinc-400">Genesis</span>
+              </div>
+              <h3 class="font-display font-black text-sm uppercase">Imported Master Resume</h3>
+              <p class="font-mono text-[11px] text-zinc-500 mt-0.5">sha:00a1f • Schema v1.0 • 3d ago</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- COLUMN 2: SNAPSHOT INSPECTOR & DIFF (Col: 7)   -->
+      <!-- ============================================== -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <div class="bg-kraft border-4 border-ink p-5 shadow-brutal-lg">
+          <div class="flex flex-wrap items-center justify-between border-b-2 border-ink pb-3 mb-4 gap-2">
+            <div>
+              <span class="font-mono text-xs uppercase text-zinc-500">Inspecting Snapshot</span>
+              <h2 class="font-display font-black text-xl uppercase tracking-tight" id="inspector-title">
+                v1.1 // Tailored: Backend Engineer
+              </h2>
+            </div>
+            
+            <div class="flex gap-2">
+              <button onclick="restoreSnapshot()" class="px-3 py-1.5 bg-ink text-newsprint font-display font-black text-xs uppercase tracking-wider border-2 border-ink shadow-brutal-sm hover:bg-highlighter hover:text-ink transition">
+                ↺ Restore This Version
+              </button>
+              <button onclick="exportSnapshotTex()" class="px-2.5 py-1.5 bg-newsprint text-ink font-mono text-xs font-bold uppercase border-2 border-ink shadow-brutal-sm hover:bg-zinc-200 transition">
+                .tex
+              </button>
+            </div>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-newsprint border-2 border-ink p-3 font-mono text-xs mb-4">
+            <div>
+              <span class="text-zinc-500 text-[10px] uppercase block">Hash</span>
+              <strong class="text-ink" id="meta-hash">sha256:4f81c9a</strong>
+            </div>
+            <div>
+              <span class="text-zinc-500 text-[10px] uppercase block">Target JD</span>
+              <strong class="text-ink truncate block" id="meta-jd">CloudScale Logistics</strong>
+            </div>
+            <div>
+              <span class="text-zinc-500 text-[10px] uppercase block">Engine</span>
+              <strong class="text-blueprint" id="meta-engine">Groq Llama 3.3</strong>
+            </div>
+            <div>
+              <span class="text-zinc-500 text-[10px] uppercase block">Truth Check</span>
+              <strong class="text-mintInk" id="meta-truth">Passed (0 Gaps)</strong>
+            </div>
+          </div>
+
+          <!-- Diff against Active Version -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display font-black text-sm uppercase">Delta vs Active Head (v1.2)</h3>
+              <span class="font-mono text-[10px] text-zinc-500">2 bullets divergent</span>
+            </div>
+
+            <!-- Diff Block 1 -->
+            <div class="bg-newsprint border-2 border-ink p-3 space-y-2 text-xs font-sans">
+              <div class="font-mono font-bold text-[11px] text-zinc-500 uppercase border-b border-zinc-200 pb-1">
+                Experience // Sharma & Saraf Groups LLP
+              </div>
+              <div class="bg-red-50 p-2 border-l-2 border-stampRed text-zinc-700 line-through decoration-stampRed">
+                <strong class="font-mono text-stampRed font-bold text-[10px]">[IN v1.1]:</strong>
+                "Engineered high-throughput event queues utilizing Redis BullMQ and modular monolith architecture, reducing API payload latency by 42%."
+              </div>
+              <div class="bg-emerald-50 p-2 border-l-2 border-mintInk text-zinc-800">
+                <strong class="font-mono text-mintInk font-bold text-[10px]">[IN ACTIVE v1.2]:</strong>
+                "Engineered modular monolith RESTful APIs with Express & PostgreSQL, resolving connection pool collisions and hardening DevAuth middleware."
+              </div>
+            </div>
+
+            <!-- Diff Block 2 -->
+            <div class="bg-newsprint border-2 border-ink p-3 space-y-2 text-xs font-sans">
+              <div class="font-mono font-bold text-[11px] text-zinc-500 uppercase border-b border-zinc-200 pb-1">
+                Project Focus
+              </div>
+              <div class="bg-red-50 p-2 border-l-2 border-stampRed text-zinc-700 line-through decoration-stampRed">
+                <strong class="font-mono text-stampRed font-bold text-[10px]">[IN v1.1]:</strong>
+                Emphasized <em>RefNet</em> (Postgres, Redis, Docker Compose job referral queue).
+              </div>
+              <div class="bg-emerald-50 p-2 border-l-2 border-mintInk text-zinc-800">
+                <strong class="font-mono text-mintInk font-bold text-[10px]">[IN ACTIVE v1.2]:</strong>
+                Emphasized <em>Naadan Platform</em> (Next.js, WebSockets, Prisma ORM real-time cloud kitchen).
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VIEW 7: DUAL-FORMAT EXPORT & COMPILATION TRAY             -->
+  <!-- ========================================================= -->
+  <div id="view-export" class="suite-view hidden">
+<main class="max-w-6xl w-full mx-auto px-4 pt-8 flex-1">
+    
+    <!-- Title & Context Strip -->
+    <div class="flex flex-wrap items-end justify-between gap-4 pb-6 border-b-2 border-ink">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="washi-tape px-3 py-0.5 text-xs font-mono font-bold uppercase text-ink rotate-[-1deg]">
+            ADR-0013 // Dual-Export Guarantee
+          </span>
+        </div>
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-ink tracking-tight uppercase mt-1">
+          Export & Compilation Tray
+        </h1>
+        <p class="font-sans text-xs sm:text-sm text-zinc-600 max-w-2xl mt-1">
+          Generate pixel-perfect ATS-compliant PDFs via embedded Tectonic XeTeX, or download the clean raw LaTeX (.tex) script with sanitized characters ready for Overleaf or local compilation.
+        </p>
+      </div>
+
+      <!-- Live Compilation Badge -->
+      <div class="flex gap-2 font-mono text-xs">
+        <div class="bg-kraft border-2 border-ink p-2 text-center min-w-[100px] shadow-brutal-sm">
+          <span class="text-[10px] text-zinc-500 uppercase block">Page Density</span>
+          <strong class="text-mintInk text-sm">Exact 1 Page</strong>
+        </div>
+        <div class="bg-kraft border-2 border-ink p-2 text-center min-w-[100px] shadow-brutal-sm">
+          <span class="text-[10px] text-zinc-500 uppercase block">Compiler</span>
+          <strong class="text-ink text-sm">Tectonic v0.15</strong>
+        </div>
+        <div class="bg-kraft border-2 border-ink p-2 text-center min-w-[100px] shadow-brutal-sm">
+          <span class="text-[10px] text-zinc-500 uppercase block">Format</span>
+          <strong class="text-blueprint text-sm">PDF + .TEX</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID: DUAL ACTION CARDS (LEFT) vs LATEX SCRIPT VIEWER (RIGHT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-8">
+
+      <!-- ============================================== -->
+      <!-- COLUMN 1: COMPILE & DOWNLOAD ACTIONS (Col: 5)  -->
+      <!-- ============================================== -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Action Card A: ATS PDF -->
+        <div class="bg-kraft border-4 border-ink p-5 shadow-brutal-lg relative">
+          <div class="washi-tape absolute -top-3 right-6 px-3 py-0.5 text-[10px] font-mono font-bold uppercase border border-zinc-400">
+            Recommended for Job Applications
+          </div>
+
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">📄</span>
+            <h2 class="font-display font-black text-lg uppercase tracking-tight">Option 01: Compiled ATS PDF</h2>
+          </div>
+          <p class="font-sans text-xs text-zinc-600 mb-4 leading-relaxed">
+            Compiled directly via the Tectonic engine. Strictly single-column, standard typographic serif hierarchy, 100% parseable text layer with zero layout tables or unparsed graphics.
+          </p>
+
+          <div class="bg-newsprint border-2 border-ink p-3 mb-4 space-y-1 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-zinc-500">Output Binary:</span>
+              <strong class="text-ink">taha-khan-resume.pdf</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-zinc-500">File Size:</span>
+              <strong class="text-ink">~42 KB (Vector text layer)</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-zinc-500">Compilation Time:</span>
+              <strong class="text-mintInk" id="compile-time-stat">&lt; 0.4s (Local Rust)</strong>
+            </div>
+          </div>
+
+          <button id="btn-compile-pdf" onclick="compileAndDownloadPdf()" class="w-full py-3 bg-ink text-newsprint font-display font-black text-sm uppercase tracking-wider border-2 border-ink shadow-brutal hover:bg-blueprint hover:text-white transition flex items-center justify-center gap-2">
+            <span>⬇ Compile & Download PDF</span>
+          </button>
+        </div>
+
+        <!-- Action Card B: LaTeX Source (.tex) -->
+        <div class="bg-newsprint border-4 border-ink p-5 shadow-brutal-lg relative">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">📜</span>
+            <h2 class="font-display font-black text-lg uppercase tracking-tight">Option 02: Raw LaTeX Script (.tex)</h2>
+          </div>
+          <p class="font-sans text-xs text-zinc-600 mb-4 leading-relaxed">
+            Own your source code. Export raw plain-text LaTeX code with auto-escaped characters (<code>\&amp;</code>, <code>\%</code>, <code>\$</code>, <code>\#</code>) ready for Overleaf, TeX Live, or Git versioning.
+          </p>
+
+          <div class="flex gap-2">
+            <button onclick="downloadTexFile()" class="flex-1 py-2.5 bg-kraft text-ink font-mono font-bold text-xs uppercase border-2 border-ink shadow-brutal-sm hover:bg-highlighter transition flex items-center justify-center gap-1.5">
+              <span>⬇ Download .tex File</span>
+            </button>
+            <button onclick="copyTexToClipboard()" class="flex-1 py-2.5 bg-kraft text-ink font-mono font-bold text-xs uppercase border-2 border-ink shadow-brutal-sm hover:bg-zinc-200 transition flex items-center justify-center gap-1.5">
+              <span>📋 Copy Code</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ATS Pre-Flight Checklist -->
+        <div class="bg-kraft border-2 border-ink p-4 font-mono text-xs">
+          <div class="flex items-center justify-between border-b border-ink pb-2 mb-2 font-bold uppercase">
+            <span>ATS Format Pre-Flight Audit</span>
+            <span class="text-mintInk">100% Passed</span>
+          </div>
+          <ul class="space-y-1.5 text-[11px] text-zinc-700">
+            <li class="flex items-center gap-2">
+              <span class="text-mintInk font-bold">✓</span> Single column, linear typographic flow (No nested tables)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-mintInk font-bold">✓</span> Real searchable text layer (Selectable vector glyphs)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-mintInk font-bold">✓</span> Strict 1-page budget adherence (Zero overflow lines)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-mintInk font-bold">✓</span> Demographic safety: Photos, DOB &amp; private CTC stripped
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- COLUMN 2: INTERACTIVE LATEX SCRIPT (Col: 7)    -->
+      <!-- ============================================== -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <div class="bg-kraft border-4 border-ink p-4 shadow-brutal-lg flex flex-col h-full">
+          <div class="flex flex-wrap items-center justify-between border-b-2 border-ink pb-2 mb-3 gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-highlighter border border-ink"></span>
+              <h3 class="font-display font-black text-sm uppercase tracking-tight">Canonical Template Code (template.tex)</h3>
+            </div>
+            
+            <div class="flex items-center gap-2 font-mono text-xs">
+              <span class="text-[10px] text-zinc-500">Character Sanitization:</span>
+              <span class="text-mintInk font-bold bg-newsprint px-1 border border-ink">Escaped &amp; Valid</span>
+            </div>
+          </div>
+
+          <!-- Code View Area -->
+          <div class="relative flex-1">
+            <textarea id="latex-editor-preview" readonly class="w-full h-[470px] bg-zinc-900 text-zinc-100 p-4 font-mono text-xs leading-relaxed border-2 border-ink resize-none custom-scroll focus:outline-none">
+%-------------------------
+% Resume in LaTeX
+% Author : Taha Hakim Khan
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins for strict 1-page fit
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Taha Hakim Khan} \\ \vspace{2pt}
+    \small Nagpur, Maharashtra, India $|$ \href{mailto:mohd.tahakhan9@gmail.com}{\underline{mohd.tahakhan9@gmail.com}} $|$ 
+    \href{https://github.com/TahaKhanSDE}{\underline{github.com/TahaKhanSDE}} $|$
+    \href{https://tahakhansde.vercel.app}{\underline{tahakhansde.vercel.app}}
+\end{center}
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Software Engineer \& SDE Intern}{06/2026 -- Present}
+      {Sharma \& Saraf Groups LLP}{Nagpur, MH, India}
+      \resumeItemListStart
+        \resumeItem{Engineered modular monolith RESTful APIs with Express \& PostgreSQL, resolving connection pool collisions and hardening DevAuth middleware.}
+        \resumeItem{Hardened Sequelize associations outside retry loop to eliminate alias collisions; configured dual dev environment scripts via concurrently.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Web Development Intern}{08/2024 -- 10/2024}
+      {Nass Technologies}{Nagpur, MH, India}
+      \resumeItemListStart
+        \resumeItem{Developed responsive client interfaces with modern JavaScript and optimized frontend load performance.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Selected Projects}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {RefNet -- Job Referral Network System}{PostgreSQL, Redis, Docker, Supabase, JWT}
+      {Full-Stack Lead Engineer}{2026}
+      \resumeItemListStart
+        \resumeItem{Architected job referral engine with Redis cache layers and Docker Compose, implementing JWT authentication and connection pools.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Naadan Platform -- Real-time Cloud Kitchen}{Next.js, WebSockets, Prisma, PostgreSQL}
+      {Full-Stack Architecture}{2026}
+      \resumeItemListStart
+        \resumeItem{Deployed real-time production kitchen system featuring Kitchen Display System via WebSockets (Socket.io) with Hostinger DNS routing.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: JavaScript (ES6+), TypeScript, C++, Python, SQL} \\
+     \textbf{Frameworks \& Libraries}{: React.js, Next.js, Node.js, Express.js, Tailwind CSS, Prisma ORM, Socket.io} \\
+     \textbf{Databases \& DevOps}{: PostgreSQL, Redis, MongoDB, Docker, Git, BullMQ, Vercel, Render}
+    }}
+ \end{itemize}
+
+\end{document}</textarea>
+
+            <!-- Rubber Stamp Overlay -->
+            <div class="absolute bottom-4 right-4 rubber-stamp px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest rotate-[-8deg] bg-zinc-900/90 shadow-brutal-sm">
+              [LATEX SANITIZED]
+            </div>
+          </div>
+
+          <!-- Bottom Notice -->
+          <div class="mt-3 flex items-center justify-between text-[11px] font-mono text-zinc-600">
+            <span>Special character parser: <code>\&amp;</code>, <code>\%</code>, <code>\$</code>, <code>\_</code> active</span>
+            <span class="text-blueprint font-bold">Overleaf Compatible (XeLaTeX / pdfLaTeX)</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- EXACT PRESERVED LATEX & ATS PDF DUAL-PREVIEW DRAWER       -->
+  <!-- ========================================================= -->
+<!-- ========================================================= -->
+  <!-- 6. INTERACTIVE LATEX & PDF DUAL-PREVIEW DRAWER (SLIDE-IN) -->
+  <!-- ========================================================= -->
+  <div id="preview-drawer" class="fixed inset-0 z-50 bg-carbon/60 backdrop-blur-sm hidden flex justify-end transition-opacity duration-300">
+    <div class="bg-newsprint w-full max-w-3xl h-full shadow-2xl border-l-4 border-carbon flex flex-col overflow-hidden transform translate-x-full transition-transform duration-300" id="drawer-panel">
+      
+      <!-- Drawer Top Bar -->
+      <div class="bg-kraft border-b-2 border-carbon p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="font-display font-black text-lg text-carbon">STUDIO PREVIEW</span>
+          <div class="flex bg-white border border-carbon rounded p-0.5 font-mono text-xs">
+            <button id="tab-pdf" onclick="switchDrawerTab('pdf'); playClickSound()" class="px-3 py-1 bg-carbon text-white font-bold rounded-sm">
+              ATS PDF View
+            </button>
+            <button id="tab-tex" onclick="switchDrawerTab('tex'); playClickSound()" class="px-3 py-1 text-carbon font-medium hover:bg-kraft rounded-sm">
+              LaTeX Source (.tex)
+            </button>
+          </div>
+        </div>
+
+        <button onclick="closeDrawer(); playClickSound()" class="font-mono text-xs font-bold px-2 py-1 border border-carbon bg-white hover:bg-carbon hover:text-white rounded">
+          ✕ CLOSE
+        </button>
+      </div>
+
+      <!-- Drawer Content Area -->
+      <div class="flex-1 overflow-y-auto p-6">
+        
+        <!-- TAB 1: PDF ATS VIEW -->
+        <div id="content-pdf" class="bg-white border-2 border-carbon shadow-brutal p-8 sm:p-12 font-serif text-carbon max-w-2xl mx-auto min-h-[600px] leading-normal text-xs sm:text-sm">
+          <div class="text-center border-b border-carbon/30 pb-4 mb-4">
+            <h1 class="font-bold text-2xl tracking-wide uppercase font-serif">KESHAV SHARMA</h1>
+            <p class="font-mono text-xs text-carbon/70 mt-1">
+              Bangalore, India • +91 98765 43210 • keshav@example.com • github.com/keshav • linkedin.com/in/keshav
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <h2 class="font-mono font-bold text-xs uppercase tracking-widest border-b border-carbon pb-1 mb-2">Technical Experience</h2>
+              <div class="space-y-3 font-body">
+                <div>
+                  <div class="flex justify-between font-bold text-xs">
+                    <span>Senior Systems Engineer — Distributed Cache Systems</span>
+                    <span class="font-mono">2023 – Present</span>
+                  </div>
+                  <ul class="list-disc list-inside text-xs space-y-1 mt-1 text-carbon/90">
+                    <li>Architected async queue pipeline in Rust handling 12,000 requests/sec with sub-15ms p99 response times.</li>
+                    <li>Integrated idempotency safeguards using Redis outbox patterns, eliminating duplicate writes during worker retries.</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <div class="flex justify-between font-bold text-xs">
+                    <span>Software Engineer — Cloud Infrastructure</span>
+                    <span class="font-mono">2021 – 2023</span>
+                  </div>
+                  <ul class="list-disc list-inside text-xs space-y-1 mt-1 text-carbon/90">
+                    <li>Led container migration to Kubernetes, trimming cloud computing expenses by 32% across 4 production regions.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="font-mono font-bold text-xs uppercase tracking-widest border-b border-carbon pb-1 mb-2">Technical Competencies</h2>
+              <p class="font-body text-xs leading-relaxed">
+                <strong>Languages:</strong> Rust, TypeScript, Python, SQL, Go<br>
+                <strong>Infrastructure:</strong> Docker, Kubernetes, Redis, PostgreSQL, Kafka, Linux, Git<br>
+                <strong>ATS Compliance:</strong> Single-column linear layout, standard fonts, 100% parseable text.
+              </p>
+            </div>
+          </div>
+
+          <!-- Rubber stamp in corner of PDF -->
+          <div class="mt-8 pt-4 border-t border-dashed border-carbon/40 flex justify-end">
+            <span class="stamp text-mint text-xs rotate-2">[ATS VERIFIED: 98/100]</span>
+          </div>
+        </div>
+
+        <!-- TAB 2: LATEX SOURCE (.TEX) VIEW -->
+        <div id="content-tex" class="hidden">
+          <div class="bg-carbon text-gray-200 p-5 rounded font-mono text-xs overflow-x-auto border-2 border-carbon">
+            <div class="flex justify-between items-center text-gray-400 border-b border-gray-700 pb-2 mb-3">
+              <span>Jake_Resume_ATS_Strict.tex</span>
+              <button onclick="copyTexCode()" id="copy-btn" class="px-2.5 py-1 bg-ochre text-carbon font-bold rounded text-[11px] hover:bg-white transition-colors">
+                Copy .tex Code
+              </button>
+            </div>
+            <pre id="tex-code" class="text-green-400 leading-relaxed font-mono">
+%-------------------------
+% Auto-generated by TRUTH//PRINT ATS Engine
+% Compiler: Tectonic (Native Rust Engine)
+%-------------------------
+
+\documentclass[letterpaper,10pt]{article}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+\begin{document}
+
+\begin{center}
+    \textbf{\Huge \scshape KESHAV SHARMA} \\ \vspace{2pt}
+    \small +91 98765 43210 $|$ \href{mailto:keshav@example.com}{keshav@example.com} $|$
+    \href{https://linkedin.com/in/keshav}{linkedin.com/in/keshav}
+\end{center}
+
+\section{Experience}
+  \textbf{Senior Systems Engineer} $|$ Distributed Cache Systems \hfill 2023 -- Present
+  \begin{itemize}[leftmargin=0.15in, label={$\bullet$}]
+    \item Architected async queue pipeline in Rust handling 12,000 requests/sec with sub-15ms p99 latency.
+    \item Integrated idempotency safeguards using Redis outbox patterns, eliminating duplicate writes.
+  \end{itemize}
+
+\end{document}</pre>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Bottom Action Footer -->
+      <div class="bg-kraft border-t-2 border-carbon p-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="font-mono text-xs text-carbon/70">
+          <span>Engine: Tectonic v0.15 (Rust Embedded)</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="fakeDownload('pdf'); playStampSound()" class="px-4 py-2 bg-carbon text-white font-mono text-xs font-bold rounded shadow-brutal-sm hover:bg-carbon/80">
+            Download PDF
+          </button>
+          <button onclick="fakeDownload('tex'); playClickSound()" class="px-4 py-2 border-2 border-carbon bg-white text-carbon font-mono text-xs font-bold rounded shadow-brutal-sm hover:bg-kraft">
+            Download .tex Script
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+
+  <!-- MATHEMATICAL SCORING FORMULA MODAL -->
+<!-- ========================================================= -->
+  <!-- MATHEMATICAL SCORING FORMULA MODAL                        -->
+  <!-- ========================================================= -->
+  <div id="formula-modal" class="fixed inset-0 z-50 bg-carbon/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-newsprint border-4 border-carbon shadow-brutal-lg max-w-2xl w-full p-6 sm:p-8 rounded-sm font-mono text-xs relative max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b-2 border-carbon pb-4 mb-4">
+        <div>
+          <span class="stamp text-cyanprint text-[10px]">[ADR-0006 SPECIFICATION]</span>
+          <h3 class="font-display font-black text-2xl uppercase mt-1">Mathematical Scoring Formula</h3>
+        </div>
+        <button onclick="closeFormulaModal(); playClickSound()" class="px-2.5 py-1 border-2 border-carbon font-bold text-xs bg-white hover:bg-carbon hover:text-white rounded">
+          ✕ CLOSE
+        </button>
+      </div>
+
+      <!-- Formula Body -->
+      <div class="space-y-4 leading-relaxed text-carbon/90">
+        <p class="font-body text-sm text-carbon">
+          Unlike proprietary "black-box" ATS calculators, TRUTH//PRINT calculates match readiness deterministically without guessing recruiter internal rankings:
+        </p>
+
+        <div class="p-4 bg-carbon text-mint font-mono rounded text-xs space-y-1">
+          <div class="text-gray-400">// Final Hybrid Match Formula:</div>
+          <div class="text-white font-bold">Match_Score = (W_kw * S_kw) + (W_vec * S_vec) + (W_rubric * S_rubric)</div>
+          <div class="text-xs text-ochre pt-2">
+            Where:<br>
+            • W_kw (0.40) : Deterministic skill & alias keyword coverage<br>
+            • W_vec (0.35) : pgvector cosine similarity of project bullets vs JD<br>
+            • W_rubric (0.25) : Fixed rubric judgment (Seniority, scale, impact)
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2">
+          <h4 class="font-display font-black text-sm uppercase text-carbon">Format Readiness Index (100 pts):</h4>
+          <ul class="list-disc list-inside space-y-1 text-carbon/80">
+            <li><strong>-20 pts:</strong> Any multi-column floating box detected (breaks parser linear stream).</li>
+            <li><strong>-15 pts:</strong> Embedded images or canvas rendering without standard text layer.</li>
+            <li><strong>-10 pts:</strong> Unrecognized section headers (e.g. "My Journey" vs "Experience").</li>
+            <li><strong>-15 pts:</strong> Exceeding 1-page line budget (density overflow beyond 22 lines).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t-2 border-carbon flex justify-between items-center text-carbon/60 text-[11px]">
+        <span>Evaluated locally on client-side</span>
+        <button onclick="closeFormulaModal(); playClickSound()" class="px-4 py-2 bg-carbon text-white font-bold uppercase rounded shadow-brutal-sm hover:bg-ochre hover:text-carbon">
+          Understood
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- Notification Toast Box -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-carbon text-white font-mono text-xs px-4 py-3 rounded border-2 border-ochre shadow-brutal hidden transform translate-y-2 transition-transform duration-200">
+    Notification text here
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- UNIFIED SCRIPT CONTROLLER (ALL AUDIO + PAGE INTERACTION)  -->
+  <!-- ========================================================= -->
+  <script>
+    // --- Exact Web Audio Synthesizer from truth_print_ats_resume_platform.html ---
+    let audioContext = null;
+    let audioEnabled = true;
+
+    function getAudioContext() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioContext;
+    }
+
+    function playClickSound() {
+      if (!audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(620, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    function playStampSound() {
+      if (!audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    function playPaperSound() {
+      if (!audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const bufferSize = ctx.sampleRate * 0.05;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1400;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const text = document.getElementById('sound-text');
+      const icon = document.getElementById('sound-icon');
+      if (audioEnabled) {
+        text.innerText = 'FX: ON';
+        icon.innerText = '🔊';
+        showToast('Mechanical Sound Effects Enabled');
+        playClickSound();
+      } else {
+        text.innerText = 'FX: OFF';
+        icon.innerText = '🔇';
+        showToast('Sound Effects Muted');
+      }
+    }
+
+    // --- Master Suite Switcher: Preserves and Switches All 7 Views ---
+    const allViewKeys = ['landing', 'vault', 'tailor', 'diag', 'keys', 'versions', 'export'];
+
+    function switchSuiteView(viewKey) {
+      allViewKeys.forEach(k => {
+        const v = document.getElementById('view-' + k);
+        const b = document.getElementById('nav-btn-' + k);
+        if (v) {
+          if (k === viewKey) {
+            v.classList.remove('hidden');
+          } else {
+            v.classList.add('hidden');
+          }
+        }
+        if (b) {
+          if (k === viewKey) {
+            b.className = 'px-2.5 py-1 font-bold uppercase transition bg-ochre text-carbon shadow-brutal-sm';
+          } else {
+            b.className = 'px-2.5 py-1 font-bold uppercase transition bg-white border border-carbon text-carbon hover:bg-kraft shadow-brutal-sm';
+          }
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- Exact Truth-Guard Lab Data & Logic from landing ---
+    const rolesData = {
+      backend: {
+        title: 'High-Throughput Distributed Systems',
+        jd: '"Seeking engineers proficient in async task queuing, low-latency microservices, Redis pipelines, and zero-downtime database migrations under heavy write load."',
+        fake: '"Led architecture for global Redis cluster handling 500,000 writes/sec, boosting company revenue by $4.2M while managing 12 distributed database shards."',
+        trueText: '"Streamlined asynchronous event workers using BullMQ and Redis backoff retries, ensuring 100% idempotent transaction delivery across background tasks."',
+        sourceRef: "Source ID: project_ref_02 ('Async Pipeline Engine')"
+      },
+      fullstack: {
+        title: 'Full Stack Web Platform (TS/React)',
+        jd: '"Looking for engineers to scale real-time web applications using Next.js, WebSockets, client-side caching, and responsive UI performance optimization."',
+        fake: '"Built the entire world-wide CDN infrastructure serving 80M daily active users and authored 4 patents on browser rendering engines."',
+        trueText: '"Engineered responsive client state pipelines with IndexedDB caching and WebSocket subscriptions, cutting initial render latency by 42% on mobile web."',
+        sourceRef: "Source ID: experience_ref_05 ('Frontend Core Tech')"
+      }
+    };
+
+    function switchRole(roleKey) {
+      const data = rolesData[roleKey];
+      document.getElementById('lab-jd-title').innerText = data.title;
+      document.getElementById('lab-jd-text').innerText = data.jd;
+      document.getElementById('lab-fake-text').innerText = data.fake;
+      document.getElementById('lab-true-text').innerText = data.trueText;
+      document.getElementById('lab-source-ref').innerText = data.sourceRef;
+
+      const btnBackend = document.getElementById('role-btn-backend');
+      const btnFullstack = document.getElementById('role-btn-fullstack');
+      if (roleKey === 'backend') {
+        btnBackend.className = 'px-3 py-1.5 border-2 border-carbon bg-carbon text-white font-bold rounded-sm shadow-brutal-sm';
+        btnFullstack.className = 'px-3 py-1.5 border-2 border-carbon bg-white text-carbon font-bold rounded-sm shadow-brutal-sm hover:bg-kraft';
+      } else {
+        btnFullstack.className = 'px-3 py-1.5 border-2 border-carbon bg-carbon text-white font-bold rounded-sm shadow-brutal-sm';
+        btnBackend.className = 'px-3 py-1.5 border-2 border-carbon bg-white text-carbon font-bold rounded-sm shadow-brutal-sm hover:bg-kraft';
+      }
+    }
+
+    let mediaPlaying = false;
+    function toggleMediaMock() {
+      mediaPlaying = !mediaPlaying;
+      const playBtn = document.getElementById('media-play-btn');
+      const caption = document.getElementById('media-caption');
+      const progress = document.getElementById('media-progress');
+      if (mediaPlaying) {
+        playBtn.innerText = '⏸';
+        caption.innerText = 'Streaming live diff validation...';
+        progress.style.width = '85%';
+        showToast('Playing Interactive Demo Walkthrough');
+      } else {
+        playBtn.innerText = '▶';
+        caption.innerText = 'Click to preview tailoring stream';
+        progress.style.width = '33%';
+      }
+    }
+
+    function openDrawer() {
+      const drawer = document.getElementById('preview-drawer');
+      const panel = document.getElementById('drawer-panel');
+      drawer.classList.remove('hidden');
+      setTimeout(() => panel.classList.remove('translate-x-full'), 10);
+    }
+
+    function closeDrawer() {
+      const drawer = document.getElementById('preview-drawer');
+      const panel = document.getElementById('drawer-panel');
+      panel.classList.add('translate-x-full');
+      setTimeout(() => drawer.classList.add('hidden'), 300);
+    }
+
+    function switchDrawerTab(tab) {
+      const tabPdf = document.getElementById('tab-pdf');
+      const tabTex = document.getElementById('tab-tex');
+      const contentPdf = document.getElementById('content-pdf');
+      const contentTex = document.getElementById('content-tex');
+      if (tab === 'pdf') {
+        tabPdf.className = 'px-3 py-1 bg-carbon text-white font-bold rounded-sm';
+        tabTex.className = 'px-3 py-1 text-carbon font-medium hover:bg-kraft rounded-sm';
+        contentPdf.classList.remove('hidden');
+        contentTex.classList.add('hidden');
+      } else {
+        tabTex.className = 'px-3 py-1 bg-carbon text-white font-bold rounded-sm';
+        tabPdf.className = 'px-3 py-1 text-carbon font-medium hover:bg-kraft rounded-sm';
+        contentTex.classList.remove('hidden');
+        contentPdf.classList.add('hidden');
+      }
+    }
+
+    function copyTexCode() {
+      const code = document.getElementById('tex-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('LaTeX Source (.tex) copied to clipboard!');
+        playStampSound();
+      });
+    }
+
+    function fakeDownload(type) {
+      if (type === 'pdf') {
+        showToast('Compiling ATS PDF via local Tectonic... Ready!');
+      } else {
+        showToast('Exporting clean Jake_Resume_ATS_Strict.tex script...');
+      }
+    }
+
+    function scrollToLab() {
+      document.getElementById('demo-lab').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.classList.remove('hidden');
+      toast.classList.remove('translate-y-2');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.add('translate-y-2');
+      }, 3200);
+    }
+
+    // --- Master Vault Hub Logic ---
+    function switchVaultTab(tabKey) {
+      ['exp', 'proj', 'skills', 'india', 'schema'].forEach(t => {
+        const panel = document.getElementById('panel-v-' + t);
+        const btn = document.getElementById('tab-v-' + t);
+        if (panel && btn) {
+          if (t === tabKey) {
+            panel.classList.remove('hidden');
+            btn.className = 'px-4 py-2 border-2 border-carbon bg-carbon text-white font-bold rounded-t shadow-brutal-sm';
+          } else {
+            panel.classList.add('hidden');
+            btn.className = 'px-4 py-2 border-2 border-carbon bg-white text-carbon font-bold rounded-t shadow-brutal-sm hover:bg-kraft';
+          }
+        }
+      });
+    }
+
+    let experienceCount = 2;
+    function addExperience() {
+      const company = document.getElementById('new-exp-company').value.trim();
+      const role = document.getElementById('new-exp-role').value.trim();
+      const period = document.getElementById('new-exp-period').value.trim();
+      const bullet = document.getElementById('new-exp-bullet').value.trim();
+      if (!company || !role || !bullet) {
+        showToast('Please fill in Company, Role, and at least one Bullet');
+        return;
+      }
+      experienceCount++;
+      const countEl = document.getElementById('count-exp');
+      if (countEl) countEl.innerText = experienceCount;
+
+      const list = document.getElementById('experience-list');
+      const newCard = document.createElement('div');
+      newCard.className = 'bg-white border-2 border-carbon shadow-brutal p-5 rounded-sm relative';
+      newCard.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-carbon/20 pb-3 mb-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-display font-black text-lg text-carbon">${role}</h3>
+              <span class="stamp text-mint text-[10px]">[VERIFIED GROUNDING]</span>
+            </div>
+            <p class="font-mono text-xs text-carbon/70">${company} • ${period || 'Recent'}</p>
+          </div>
+          <div class="flex items-center gap-3 bg-kraft px-3 py-1.5 border border-carbon rounded-sm font-mono text-xs">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" checked class="accent-ochre w-3.5 h-3.5">
+              <span class="font-bold text-carbon">⭐ RAG Memory</span>
+            </label>
+            <span class="text-carbon/30">|</span>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" checked class="accent-mint w-3.5 h-3.5">
+              <span class="font-bold text-mint">📄 1-Page Draft</span>
+            </label>
+          </div>
+        </div>
+        <div class="p-2.5 bg-newsprint border border-carbon/20 rounded font-mono text-[11px] flex justify-between items-center">
+          <span>• ${bullet}</span>
+          <span class="text-carbon/40 text-[9px] uppercase">ID: exp_0${experienceCount}_a</span>
+        </div>
+      `;
+      list.prepend(newCard);
+      document.getElementById('new-exp-company').value = '';
+      document.getElementById('new-exp-role').value = '';
+      document.getElementById('new-exp-period').value = '';
+      document.getElementById('new-exp-bullet').value = '';
+      showToast('Milestone successfully appended to Master Vault!');
+    }
+
+    function toggleCardStatus(cardId, type, checked) {
+      showToast(checked ? `Enabled in ${type}` : `Disabled in ${type}`);
+    }
+
+    // --- Tailor Studio Logic ---
+    function loadJd(type) {
+      playClickSound();
+      const input = document.getElementById('jd-input');
+      if (type === 'backend') {
+        input.value = `Target Role: SDE-1 / Backend Engineer
+Company: CloudScale Logistics
+Requirements:
+- Strong experience in Node.js, Express, and modern asynchronous architecture.
+- Hands-on mastery of PostgreSQL schema design, connection pooling, and migrations.
+- Working knowledge of Redis caching, message queueing (BullMQ), and WebSockets.
+- Experience containerizing apps with Docker Compose and deploying on Linux.`;
+      } else {
+        input.value = `Target Role: Full Stack Engineer (TypeScript)
+Company: FinGrowth Systems
+Requirements:
+- Proven experience with TypeScript (ES6+), React.js, and Next.js (App Router).
+- Deep understanding of state management (Zustand/Redux) and Tailwind CSS.
+- Backend proficiency with Node.js, Express REST APIs, and PostgreSQL Prisma ORM.`;
+      }
+      updateJdMetrics();
+    }
+
+    function updateJdMetrics() {
+      const val = document.getElementById('jd-input').value;
+      const charCount = document.getElementById('jd-char-count');
+      const tokenCount = document.getElementById('jd-token-count');
+      if (charCount) charCount.innerText = val.length;
+      if (tokenCount) tokenCount.innerText = '~' + Math.round(val.length / 4.2);
+    }
+
+    function runTailoring() {
+      playClickSound();
+      const badge = document.getElementById('worker-status-badge');
+      badge.innerText = 'DIFF SURGERY IN PROGRESS...';
+      badge.className = 'px-2 py-0.5 bg-amber-100 border border-ochre font-bold text-amber-800';
+      setTimeout(() => {
+        playStampSound();
+        badge.innerText = 'DIFFS READY FOR APPROVAL';
+        badge.className = 'px-2 py-0.5 bg-emerald-100 border border-mint font-bold text-mint';
+        showToast('Generated grounded diffs against Master Vault!');
+      }, 1200);
+    }
+
+    function acceptDiff(id) {
+      playStampSound();
+      const card = document.getElementById('diff-card-' + id);
+      if (card) {
+        card.style.opacity = '0.5';
+        card.innerHTML = `<div class="text-xs font-mono text-mint font-bold py-1">✓ DIFF #${id} COMMITTED TO RESUME DRAFT</div>`;
+      }
+    }
+
+    function rejectDiff(id) {
+      playClickSound();
+      const card = document.getElementById('diff-card-' + id);
+      if (card) {
+        card.style.opacity = '0.4';
+        card.innerHTML = `<div class="text-xs font-mono text-crimson font-bold py-1">✕ DIFF #${id} REJECTED</div>`;
+      }
+    }
+
+    function acceptAll() {
+      acceptDiff(1);
+      acceptDiff(2);
+      acceptDiff(3);
+    }
+
+    function switchPreviewTab(tab) {
+      playClickSound();
+      document.getElementById('preview-tab-pdf').classList.toggle('hidden', tab !== 'pdf');
+      document.getElementById('preview-tab-tex').classList.toggle('hidden', tab !== 'tex');
+      const pdfBtn = document.getElementById('tab-btn-pdf');
+      const texBtn = document.getElementById('tab-btn-tex');
+      if (tab === 'pdf') {
+        pdfBtn.className = 'px-2.5 py-1 text-xs font-mono font-bold uppercase bg-ink text-newsprint shadow-brutal-sm';
+        texBtn.className = 'px-2.5 py-1 text-xs font-mono font-bold uppercase bg-newsprint text-ink border border-ink hover:bg-zinc-200';
+      } else {
+        pdfBtn.className = 'px-2.5 py-1 text-xs font-mono font-bold uppercase bg-newsprint text-ink border border-ink hover:bg-zinc-200';
+        texBtn.className = 'px-2.5 py-1 text-xs font-mono font-bold uppercase bg-ink text-newsprint shadow-brutal-sm';
+      }
+    }
+
+    function triggerDownload(format) {
+      playStampSound();
+      showToast(format === 'pdf' ? 'Compiling single-column ATS PDF via Tectonic...' : 'Exporting clean .tex script!');
+    }
+
+    function downloadTexFile() { triggerDownload('tex'); }
+    function compileAndDownloadPdf() { triggerDownload('pdf'); }
+    function copyTexToClipboard() {
+      const code = document.getElementById('latex-editor-preview');
+      if (code) {
+        navigator.clipboard.writeText(code.value).then(() => {
+          showToast('LaTeX source code copied to clipboard!');
+          playStampSound();
+        });
+      }
+    }
+
+    function openOverleafDirect() {
+      playClickSound();
+      const code = document.getElementById('latex-editor-preview').value;
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://www.overleaf.com/docs';
+      form.target = '_blank';
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'snip';
+      input.value = code;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    }
+
+    // --- Diagnostic Logic ---
+    function openFormulaModal() { document.getElementById('formula-modal').classList.remove('hidden'); }
+    function closeFormulaModal() { document.getElementById('formula-modal').classList.add('hidden'); }
+    function filterAudit(type) {
+      const rows = document.querySelectorAll('.audit-row');
+      rows.forEach(r => {
+        if (type === 'all') r.classList.remove('hidden');
+        else if (type === 'vault') r.classList.toggle('hidden', !r.classList.contains('row-vault'));
+        else if (type === 'critical') r.classList.toggle('hidden', !r.classList.contains('row-critical'));
+      });
+    }
+    function insertVaultSkill(skill) {
+      showToast(`✓ Added ${skill} from Master Vault to draft!`);
+      const btn = document.getElementById('btn-insert-' + skill.toLowerCase());
+      if (btn) {
+        btn.innerText = '✓ Added to Draft';
+        btn.disabled = true;
+      }
+    }
+    function viewGapAdvice(gap) {
+      showToast('Pivot: Emphasize BullMQ/Redis architecture rather than inventing Kafka metrics.');
+    }
+    function recalculateDiagnostic() {
+      showToast('Re-running AST checks and semantic vector embeddings...');
+    }
+
+    // --- BYOK Keys Logic ---
+    const providerConfigs = {
+      gemini: { label: 'Google AI Studio API Key (Gemini)', val: 'AIzaSyB8x0ExampleValidKeySecuredLocally', hasBaseUrl: false },
+      groq: { label: 'Groq Cloud API Key', val: 'gsk_9xSampleGroqKeyVaultLocal', hasBaseUrl: false },
+      openai: { label: 'OpenAI Secret API Key', val: 'sk-proj-ExampleOpenAIKey1024', hasBaseUrl: false },
+      anthropic: { label: 'Anthropic API Key', val: 'sk-ant-ExampleClaudeKey3312', hasBaseUrl: false },
+      ollama: { label: 'Local Ollama Model Name', val: 'deepseek-r1:8b', hasBaseUrl: true }
+    };
+    function selectProvider(key) {
+      playClickSound();
+      ['gemini', 'groq', 'openai', 'anthropic', 'ollama'].forEach(k => {
+        const btn = document.getElementById('tab-' + k);
+        if (btn) btn.className = k === key ? 'p-2.5 bg-ink text-newsprint border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm transition' : 'p-2.5 bg-newsprint text-ink border-2 border-ink text-left font-mono text-xs font-bold shadow-brutal-sm hover:bg-zinc-200 transition';
+      });
+      const conf = providerConfigs[key];
+      document.getElementById('key-label').innerText = conf.label;
+      document.getElementById('api-key-input').value = conf.val;
+      const baseUrlBox = document.getElementById('base-url-container');
+      if (conf.hasBaseUrl) baseUrlBox.classList.remove('hidden');
+      else baseUrlBox.classList.add('hidden');
+    }
+    function toggleKeyMask() {
+      const input = document.getElementById('api-key-input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+    function testKeyConnection() {
+      playClickSound();
+      const status = document.getElementById('key-ping-status');
+      status.innerText = 'Pinging...';
+      setTimeout(() => {
+        playStampSound();
+        status.innerHTML = '<span class="w-2 h-2 rounded-full bg-mintInline"></span><span class="text-mint font-bold">200 OK — Verified</span>';
+        showToast('Active API key verified successfully!');
+      }, 500);
+    }
+    function resetSessionStats() {
+      showToast('Ledger audit reset.');
+    }
+
+    // --- Version Tree Logic ---
+    const nodeData = {
+      'v1.2': { title: 'v1.2 // HEAD: FinGrowth (Full Stack)', hash: 'sha256:9284f1b', jd: 'FinGrowth Systems (Next.js/React)', engine: 'Gemini 2.0 Flash', truth: 'Passed (0 Gaps)' },
+      'v1.1': { title: 'v1.1 // Tailored: Backend Engineer', hash: 'sha256:4f81c9a', jd: 'CloudScale Logistics (Go/Node)', engine: 'Groq Llama 3.3', truth: 'Passed (0 Gaps)' },
+      'v1.0.1': { title: 'v1.0.1 // Polish: Quantified Metrics', hash: 'sha256:1c73a88', jd: 'Generic Technical Master', engine: 'Direct Manual Edit', truth: 'Verified Source' },
+      'v1.0': { title: 'v1.0 // Genesis: Root Master Schema', hash: 'sha256:00a1f5d', jd: 'None (Base Profile)', engine: 'Import Engine', truth: 'Root Trust Anchor' }
+    };
+    function selectNode(key) {
+      playClickSound();
+      const data = nodeData[key];
+      ['v1.2', 'v1.1', 'v1.0.1', 'v1.0'].forEach(k => {
+        const el = document.getElementById('node-' + k.replace(/\./g, '-'));
+        if (el) el.className = k === key ? 'cursor-pointer bg-white border-2 border-blueprint p-3 shadow-brutal-sm relative transition' : 'cursor-pointer bg-newsprint border-2 border-ink p-3 shadow-brutal-sm relative transition hover:border-blueprint';
+      });
+      document.getElementById('inspector-title').innerText = data.title;
+      document.getElementById('meta-hash').innerText = data.hash;
+      document.getElementById('meta-jd').innerText = data.jd;
+      document.getElementById('meta-engine').innerText = data.engine;
+      document.getElementById('meta-truth').innerText = data.truth;
+    }
+    function restoreSnapshot() {
+      playStampSound();
+      showToast('Snapshot restored as active working draft!');
+    }
+    function exportSnapshotTex() {
+      playClickSound();
+      showToast('Generated LaTeX (.tex) for snapshot.');
+    }
+    function createNewSnapshot() {
+      playStampSound();
+      showToast('Created immutable version checkpoint!');
+    }
+
+    // Live fluctuating ticker
+    window.addEventListener('load', () => {
+      let promptTok = 412;
+      setInterval(() => {
+        promptTok = 405 + Math.floor(Math.random() * 15);
+        const el = document.getElementById('counter-prompt');
+        if (el) el.innerText = promptTok + ' tok';
+      }, 4000);
+      loadJd('backend');
+    });
+  </script>
+</body>
+</html>

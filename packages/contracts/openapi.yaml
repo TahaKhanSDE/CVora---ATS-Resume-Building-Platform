@@ -1,0 +1,966 @@
+openapi: 3.0.3
+info:
+  title: ATS Resume Platform API
+  version: 1.0.0
+  description: |
+    Contract-first API (ADR-0002). TypeScript and Rust clients are generated from this file.
+
+    Conventions
+    - All routes are under /v1. Breaking changes require /v2 (installed mobile apps cannot be force-updated).
+    - Authentication: OIDC bearer token (same token on web and mobile).
+    - AI work is asynchronous (ADR-0004): endpoints return 202 with a task. Poll GET /v1/tasks/{taskId}.
+    - Create-task endpoints require an `Idempotency-Key` header.
+    - Lists use cursor pagination (`cursor`, `limit`). No offsets.
+    - Errors use RFC 9457 problem details.
+    - The score is an "ATS-readiness and job-match score". It is not an official ATS score (ADR-0006).
+servers:
+  - url: https://api.example.com
+    description: Production (India region). Replace before launch.
+security:
+  - bearerAuth: []
+tags:
+  - name: Me
+  - name: Profile
+  - name: Resumes
+  - name: JobDescriptions
+  - name: Scoring
+  - name: Tailoring
+  - name: Rendering
+  - name: Tasks
+  - name: Templates
+
+paths:
+  /v1/me:
+    get:
+      tags: [Me]
+      operationId: getMe
+      summary: Current user, plan and remaining quota
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Me' }
+        '401': { $ref: '#/components/responses/Problem' }
+    delete:
+      tags: [Me]
+      operationId: requestAccountDeletion
+      summary: Request account deletion (hard-delete task, ADR-0007)
+      responses:
+        '202':
+          description: Deletion accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+
+  /v1/me/consents:
+    put:
+      tags: [Me]
+      operationId: setConsent
+      summary: Grant or withdraw a consent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConsentChange' }
+      responses:
+        '204': { description: Recorded }
+        '401': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/me/export:
+    post:
+      tags: [Me]
+      operationId: requestDataExport
+      summary: Request an export of all user data
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202':
+          description: Export accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+
+  /v1/profile:
+    get:
+      tags: [Profile]
+      operationId: getProfile
+      summary: Get the master profile
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag: { $ref: '#/components/headers/ETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Profile' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+    put:
+      tags: [Profile]
+      operationId: putProfile
+      summary: Replace the master profile (optimistic concurrency via If-Match)
+      parameters:
+        - name: If-Match
+          in: header
+          required: false
+          description: ETag from the last read. Mismatch returns 412.
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ResumeContent' }
+      responses:
+        '200':
+          description: Saved
+          headers:
+            ETag: { $ref: '#/components/headers/ETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Profile' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '412': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes:
+    get:
+      tags: [Resumes]
+      operationId: listResumes
+      summary: List resumes (cursor paginated)
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: kind
+          in: query
+          schema: { type: string, enum: [base, tailored] }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResumePage' }
+        '401': { $ref: '#/components/responses/Problem' }
+    post:
+      tags: [Resumes]
+      operationId: createResume
+      summary: Create a base resume (from the profile, or from supplied content)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateResumeRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Resume' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/import:
+    post:
+      tags: [Resumes]
+      operationId: importResume
+      summary: Import an existing PDF or DOCX. Parsed asynchronously into the resume schema.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ImportResumeRequest' }
+      responses:
+        '202':
+          description: Import accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/{resumeId}:
+    parameters:
+      - $ref: '#/components/parameters/ResumeId'
+    get:
+      tags: [Resumes]
+      operationId: getResume
+      summary: Get a resume with its current version
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResumeDetail' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+    delete:
+      tags: [Resumes]
+      operationId: deleteResume
+      summary: Delete a resume
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/{resumeId}/versions:
+    parameters:
+      - $ref: '#/components/parameters/ResumeId'
+    get:
+      tags: [Resumes]
+      operationId: listResumeVersions
+      summary: List versions of a resume
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResumeVersionPage' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+    post:
+      tags: [Resumes]
+      operationId: createResumeVersion
+      summary: Save an edit as a new immutable version
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ResumeContent' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResumeVersion' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/{resumeId}/versions/{versionId}:
+    parameters:
+      - $ref: '#/components/parameters/ResumeId'
+      - $ref: '#/components/parameters/VersionId'
+    get:
+      tags: [Resumes]
+      operationId: getResumeVersion
+      summary: Get one version
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResumeVersion' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/{resumeId}/versions/{versionId}/diff:
+    parameters:
+      - $ref: '#/components/parameters/ResumeId'
+      - $ref: '#/components/parameters/VersionId'
+    get:
+      tags: [Tailoring]
+      operationId: getVersionDiff
+      summary: Diff of a tailored version against the version it was derived from
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VersionDiff' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/{resumeId}/versions/{versionId}/approval:
+    parameters:
+      - $ref: '#/components/parameters/ResumeId'
+      - $ref: '#/components/parameters/VersionId'
+    post:
+      tags: [Tailoring]
+      operationId: decideVersionApproval
+      summary: Approve or reject an AI-tailored version (the user must approve before it is final, ADR-0005)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ApprovalDecision' }
+      responses:
+        '200':
+          description: Decision recorded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResumeVersion' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+
+  /v1/resumes/{resumeId}/versions/{versionId}/render:
+    parameters:
+      - $ref: '#/components/parameters/ResumeId'
+      - $ref: '#/components/parameters/VersionId'
+    post:
+      tags: [Rendering]
+      operationId: renderResumeVersion
+      summary: Render a version to PDF (asynchronous, server-side only)
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RenderRequest' }
+      responses:
+        '202':
+          description: Render accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/job-descriptions:
+    get:
+      tags: [JobDescriptions]
+      operationId: listJobDescriptions
+      summary: List saved job descriptions
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/JobDescriptionPage' }
+        '401': { $ref: '#/components/responses/Problem' }
+    post:
+      tags: [JobDescriptions]
+      operationId: createJobDescription
+      summary: Save a job description. Parsing runs asynchronously.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateJobDescriptionRequest' }
+      responses:
+        '201':
+          description: Created. `parsed` is null until the parse task finishes.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/JobDescription' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/job-descriptions/{jobDescriptionId}:
+    parameters:
+      - $ref: '#/components/parameters/JobDescriptionId'
+    get:
+      tags: [JobDescriptions]
+      operationId: getJobDescription
+      summary: Get a job description
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/JobDescription' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+    delete:
+      tags: [JobDescriptions]
+      operationId: deleteJobDescription
+      summary: Delete a job description
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/scores:
+    post:
+      tags: [Scoring]
+      operationId: createScore
+      summary: Score a resume version. With a job description it is a match score, without one a format-only readiness check.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateScoreRequest' }
+      responses:
+        '202':
+          description: Scoring accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+    get:
+      tags: [Scoring]
+      operationId: listScores
+      summary: Score history
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: resumeVersionId
+          in: query
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ScorePage' }
+        '401': { $ref: '#/components/responses/Problem' }
+
+  /v1/scores/{scoreId}:
+    parameters:
+      - name: scoreId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Scoring]
+      operationId: getScore
+      summary: Get a score with its breakdown and findings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Score' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/tailorings:
+    post:
+      tags: [Tailoring]
+      operationId: createTailoring
+      summary: Tailor the profile to a job description. Produces a version pending approval.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateTailoringRequest' }
+      responses:
+        '202':
+          description: Tailoring accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+
+  /v1/tasks/{taskId}:
+    parameters:
+      - $ref: '#/components/parameters/TaskId'
+    get:
+      tags: [Tasks]
+      operationId: getTask
+      summary: Poll a task
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+    delete:
+      tags: [Tasks]
+      operationId: cancelTask
+      summary: Cancel a queued or running task
+      responses:
+        '202':
+          description: Cancellation requested
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+
+  /v1/tasks/{taskId}/events:
+    parameters:
+      - $ref: '#/components/parameters/TaskId'
+    get:
+      tags: [Tasks]
+      operationId: streamTaskEvents
+      summary: Server-sent events for task progress (alternative to polling)
+      responses:
+        '200':
+          description: Event stream
+          content:
+            text/event-stream:
+              schema: { type: string }
+        '401': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/templates:
+    get:
+      tags: [Templates]
+      operationId: listTemplates
+      summary: ATS-safe resume templates
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Template' }
+        '401': { $ref: '#/components/responses/Problem' }
+
+  /v1/uploads:
+    post:
+      tags: [Resumes]
+      operationId: createUpload
+      summary: Get a signed URL to upload a file directly to object storage (bytes never pass through the API)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateUploadRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Upload' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  headers:
+    ETag:
+      description: Concurrency token for the profile
+      schema: { type: string }
+
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Client-generated unique key (UUID). A repeat with the same key returns the original task.
+      schema: { type: string, minLength: 8, maxLength: 100 }
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    ResumeId:
+      name: resumeId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    VersionId:
+      name: versionId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    JobDescriptionId:
+      name: jobDescriptionId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  responses:
+    Problem:
+      description: Error (RFC 9457 problem details)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+
+  schemas:
+    Problem:
+      type: object
+      required: [type, title, status]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        code:
+          type: string
+          description: Stable machine-readable code, for example quota_exceeded, consent_required, validation_failed
+        errors:
+          type: array
+          items:
+            type: object
+            required: [path, message]
+            properties:
+              path: { type: string }
+              message: { type: string }
+
+    Page:
+      type: object
+      required: [items]
+      properties:
+        next_cursor:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items: {}
+
+    ResumeContent:
+      type: object
+      description: Structured resume. The authoritative definition is packages/resume-schema/resume.schema.json. Generators should take the shape from that file.
+      required: [schema_version, basics]
+      additionalProperties: true
+      properties:
+        schema_version: { type: string, example: '1.0.0' }
+        basics: { type: object, additionalProperties: true }
+
+    Me:
+      type: object
+      required: [id, plan, quota]
+      properties:
+        id: { type: string, format: uuid }
+        display_name: { type: string, nullable: true }
+        home_region: { type: string }
+        ui_locale: { type: string }
+        plan: { type: string }
+        quota:
+          type: object
+          description: Remaining usage this period, per metric
+          additionalProperties:
+            type: object
+            required: [limit, used]
+            properties:
+              limit: { type: integer }
+              used: { type: integer }
+        consents:
+          type: array
+          items: { $ref: '#/components/schemas/ConsentState' }
+
+    ConsentState:
+      type: object
+      required: [purpose, granted]
+      properties:
+        purpose: { $ref: '#/components/schemas/ConsentPurpose' }
+        granted: { type: boolean }
+        policy_version: { type: string }
+
+    ConsentPurpose:
+      type: string
+      enum: [account, ai_processing, analytics, marketing]
+
+    ConsentChange:
+      type: object
+      required: [purpose, granted, policy_version]
+      properties:
+        purpose: { $ref: '#/components/schemas/ConsentPurpose' }
+        granted: { type: boolean }
+        policy_version: { type: string }
+
+    Profile:
+      type: object
+      required: [data, version]
+      properties:
+        data: { $ref: '#/components/schemas/ResumeContent' }
+        version: { type: integer }
+        updated_at: { type: string, format: date-time }
+
+    Resume:
+      type: object
+      required: [id, title, kind, current_version_id, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        kind: { type: string, enum: [base, tailored] }
+        job_description_id: { type: string, format: uuid, nullable: true }
+        current_version_id: { type: string, format: uuid, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    ResumeDetail:
+      allOf:
+        - $ref: '#/components/schemas/Resume'
+        - type: object
+          required: [current_version]
+          properties:
+            current_version: { $ref: '#/components/schemas/ResumeVersion' }
+
+    ResumePage:
+      allOf:
+        - $ref: '#/components/schemas/Page'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/Resume' }
+
+    CreateResumeRequest:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 120 }
+        from_profile:
+          type: boolean
+          default: true
+          description: Build the first version from the master profile
+        content:
+          allOf:
+            - $ref: '#/components/schemas/ResumeContent'
+          description: Used when from_profile is false
+        template_id: { type: string }
+
+    ImportResumeRequest:
+      type: object
+      required: [upload_id]
+      properties:
+        upload_id: { type: string, format: uuid }
+
+    ResumeVersion:
+      type: object
+      required: [id, resume_id, version_no, content, origin, status, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        resume_id: { type: string, format: uuid }
+        version_no: { type: integer }
+        content: { $ref: '#/components/schemas/ResumeContent' }
+        origin: { type: string, enum: [user, import, ai_tailor] }
+        status: { type: string, enum: [draft, pending_approval, approved, rejected] }
+        derived_from_version_id: { type: string, format: uuid, nullable: true }
+        template_id: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+
+    ResumeVersionPage:
+      allOf:
+        - $ref: '#/components/schemas/Page'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/ResumeVersion' }
+
+    ApprovalDecision:
+      type: object
+      required: [decision]
+      properties:
+        decision: { type: string, enum: [approve, reject] }
+        rejected_change_ids:
+          type: array
+          description: Optionally reject only specific changes. Those fall back to the source text.
+          items: { type: string, format: uuid }
+
+    VersionDiff:
+      type: object
+      required: [from_version_id, to_version_id, changes]
+      properties:
+        from_version_id: { type: string, format: uuid }
+        to_version_id: { type: string, format: uuid }
+        changes:
+          type: array
+          items:
+            type: object
+            required: [id, kind, section]
+            properties:
+              id: { type: string, format: uuid }
+              kind: { type: string, enum: [rephrased, reordered, included, omitted] }
+              section: { type: string, enum: [basics, experience, education, projects, skills, certifications, achievements, languages] }
+              item_id: { type: string, format: uuid, nullable: true }
+              before: { type: string, nullable: true }
+              after: { type: string, nullable: true }
+              source_refs:
+                type: array
+                items: { type: string, format: uuid }
+              reason:
+                type: string
+                description: Why the change was made, for example "Matches the job's requirement for PostgreSQL"
+
+    RenderRequest:
+      type: object
+      properties:
+        template_id: { type: string }
+        page_size: { type: string, enum: [A4, Letter], default: A4 }
+
+    JobDescription:
+      type: object
+      required: [id, title, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string, nullable: true }
+        company: { type: string, nullable: true }
+        location: { type: string, nullable: true }
+        source_url: { type: string, nullable: true }
+        parsed:
+          type: object
+          nullable: true
+          description: Structured job description, set when the parse task finishes
+          additionalProperties: true
+        created_at: { type: string, format: date-time }
+
+    JobDescriptionPage:
+      allOf:
+        - $ref: '#/components/schemas/Page'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/JobDescription' }
+
+    CreateJobDescriptionRequest:
+      type: object
+      required: [raw_text]
+      properties:
+        title: { type: string, maxLength: 160 }
+        company: { type: string, maxLength: 160 }
+        location: { type: string, maxLength: 160 }
+        source_url: { type: string, format: uri }
+        raw_text: { type: string, minLength: 50, maxLength: 20000 }
+
+    CreateScoreRequest:
+      type: object
+      required: [resume_version_id]
+      properties:
+        resume_version_id: { type: string, format: uuid }
+        job_description_id:
+          type: string
+          format: uuid
+          description: Omit for a format-only readiness check
+
+    Score:
+      type: object
+      required: [id, resume_version_id, overall, breakdown, findings, scoring_version, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        resume_version_id: { type: string, format: uuid }
+        job_description_id: { type: string, format: uuid, nullable: true }
+        overall: { type: integer, minimum: 0, maximum: 100 }
+        breakdown:
+          type: object
+          description: Per-component scores, each 0 to 100
+          properties:
+            skills: { type: integer, minimum: 0, maximum: 100 }
+            semantic: { type: integer, minimum: 0, maximum: 100 }
+            rubric: { type: integer, minimum: 0, maximum: 100 }
+            format: { type: integer, minimum: 0, maximum: 100 }
+        findings:
+          type: array
+          items: { $ref: '#/components/schemas/Finding' }
+        scoring_version: { type: string }
+        created_at: { type: string, format: date-time }
+
+    Finding:
+      type: object
+      required: [severity, code, message]
+      properties:
+        severity: { type: string, enum: [info, warning, critical] }
+        code: { type: string, example: missing_required_skill }
+        message: { type: string }
+        section: { type: string, nullable: true }
+        suggestion:
+          type: string
+          nullable: true
+          description: An honest, actionable fix. Never a suggestion to claim skills the user does not have.
+
+    ScorePage:
+      allOf:
+        - $ref: '#/components/schemas/Page'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/Score' }
+
+    CreateTailoringRequest:
+      type: object
+      required: [job_description_id]
+      properties:
+        job_description_id: { type: string, format: uuid }
+        base_resume_id:
+          type: string
+          format: uuid
+          description: Defaults to building from the master profile
+        template_id: { type: string }
+        max_pages: { type: integer, minimum: 1, maximum: 3, default: 1 }
+
+    Task:
+      type: object
+      required: [id, type, status, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        type: { type: string, enum: [parse_resume, parse_jd, score, tailor, render, export, delete_account] }
+        status: { type: string, enum: [queued, running, retrying, succeeded, failed, cancelled] }
+        progress: { type: integer, minimum: 0, maximum: 100 }
+        result:
+          type: object
+          nullable: true
+          description: Ids of produced resources, for example score_id, resume_version_id, download_url
+          additionalProperties: true
+        error:
+          type: object
+          nullable: true
+          properties:
+            code: { type: string }
+            message: { type: string }
+        created_at: { type: string, format: date-time }
+        finished_at: { type: string, format: date-time, nullable: true }
+
+    Template:
+      type: object
+      required: [id, name, ats_safe]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        ats_safe: { type: boolean }
+        preview_url: { type: string, nullable: true }
+
+    CreateUploadRequest:
+      type: object
+      required: [filename, content_type, size_bytes]
+      properties:
+        filename: { type: string, maxLength: 200 }
+        content_type:
+          type: string
+          enum:
+            - application/pdf
+            - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+        size_bytes: { type: integer, minimum: 1, maximum: 5242880 }
+
+    Upload:
+      type: object
+      required: [upload_id, url, expires_at]
+      properties:
+        upload_id: { type: string, format: uuid }
+        url: { type: string, format: uri }
+        method: { type: string, enum: [PUT], default: PUT }
+        headers:
+          type: object
+          additionalProperties: { type: string }
+        expires_at: { type: string, format: date-time }

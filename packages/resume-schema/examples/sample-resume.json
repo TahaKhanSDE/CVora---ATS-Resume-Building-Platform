@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0.0",
+  "basics": {
+    "name": "Asha Verma",
+    "headline": "Backend Engineer",
+    "email": "asha.verma@example.com",
+    "phone": "+91 98765 43210",
+    "location": { "city": "Pune", "state": "Maharashtra", "country": "India" },
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/example-asha" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/example-asha" }
+    ],
+    "summary": "Backend engineer with 3 years of experience building REST APIs and data pipelines."
+  },
+  "experience": [
+    {
+      "id": "0192f3a0-7b1c-7c3e-8a10-000000000001",
+      "company": "Example Tech Pvt Ltd",
+      "title": "Software Engineer",
+      "location": "Pune, India",
+      "employment_type": "full_time",
+      "start": "2023-06",
+      "end": null,
+      "current": true,
+      "technologies": ["Node.js", "PostgreSQL", "Redis"],
+      "bullets": [
+        {
+          "id": "0192f3a0-7b1c-7c3e-8a10-000000000011",
+          "text": "Built order-tracking REST APIs in Node.js serving 40k requests per day."
+        },
+        {
+          "id": "0192f3a0-7b1c-7c3e-8a10-000000000012",
+          "text": "Cut p95 API latency from 900 ms to 350 ms by adding Redis caching."
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "0192f3a0-7b1c-7c3e-8a10-000000000021",
+      "institution": "Example Institute of Technology",
+      "degree": "B.Tech",
+      "field": "Computer Science",
+      "start": "2019-08",
+      "end": "2023-05",
+      "grade": { "type": "cgpa", "value": 8.4, "scale": 10 }
+    }
+  ],
+  "projects": [
+    {
+      "id": "0192f3a0-7b1c-7c3e-8a10-000000000031",
+      "name": "Expense Splitter",
+      "description": "Group expense tracking app with settlement suggestions.",
+      "repo_url": "https://github.com/example-asha/expense-splitter",
+      "technologies": ["TypeScript", "React", "PostgreSQL"],
+      "bullets": [
+        {
+          "id": "0192f3a0-7b1c-7c3e-8a10-000000000032",
+          "text": "Implemented a debt-simplification algorithm that reduces the number of settlements."
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "0192f3a0-7b1c-7c3e-8a10-000000000041",
+      "category": "Languages",
+      "items": [
+        { "id": "0192f3a0-7b1c-7c3e-8a10-000000000042", "name": "TypeScript", "years": 3 },
+        { "id": "0192f3a0-7b1c-7c3e-8a10-000000000043", "name": "SQL", "years": 3 }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "id": "0192f3a0-7b1c-7c3e-8a10-000000000051",
+      "name": "AWS Certified Cloud Practitioner",
+      "issuer": "Amazon Web Services",
+      "date": "2024-03"
+    }
+  ],
+  "languages": [
+    { "id": "0192f3a0-7b1c-7c3e-8a10-000000000061", "name": "English", "proficiency": "professional" },
+    { "id": "0192f3a0-7b1c-7c3e-8a10-000000000062", "name": "Hindi", "proficiency": "native" }
+  ],
+  "private": {
+    "notice_period_days": 30,
+    "render_opt_in": []
+  },
+  "meta": {
+    "template_id": "classic-single-column",
+    "locale": "en-IN",
+    "generated_by": { "kind": "user" }
+  }
+}
